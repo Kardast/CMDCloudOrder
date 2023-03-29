@@ -1,0 +1,43 @@
+.content {
+  height: 100% !important;
+}
+
+.fc-col-header,
+.fc-timegrid-body {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.fc-scrollgrid-sync-table {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.fc-daygrid-body {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.fc-daygrid-body-balanced {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.fc-header-toolbar > .fc-toolbar-chunk:first-child,
+.fc-header-toolbar > .fc-toolbar-chunk:last-child {
+  flex-grow: 1;
+  flex-basis: 0;
+  display: flex;
+}
+
+.fc-header-toolbar > .fc-toolbar-chunk:last-child {
+  justify-content: end;
+}
+
+.fc-event:hover {
+  cursor: pointer;
+}
+
+.fc {
+  height: 100% !important;
+}

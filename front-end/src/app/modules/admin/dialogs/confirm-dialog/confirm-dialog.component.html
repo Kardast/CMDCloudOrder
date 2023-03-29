@@ -1,0 +1,9 @@
+<h1 mat-dialog-title>{{ "confirm" | transloco }}</h1>
+<mat-dialog-content>
+  <span>{{ text }}</span>
+</mat-dialog-content>
+
+<mat-dialog-actions [align]="'center'">
+    <button mat-raised-button (click)="confirm()">{{'confirm' | transloco}}</button>
+    <button mat-raised-button (click)="abort()">{{'abort' | transloco}}</button>
+</mat-dialog-actions>

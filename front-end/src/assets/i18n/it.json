@@ -1,0 +1,86 @@
+{
+  "loading": "Caricamento...",
+  "add": "Aggiungi",
+  "edit": "Modifica",
+  "remove": "Rimuovi",
+  "save": "Salva",
+  "ok": "OK",
+  "cancel": "Annulla",
+  "confirm": "Conferma",
+  "abort": "Annulla",
+  "reset": "Ripristina",
+  "start": "Inizio",
+  "finish": "Fine",
+  "pagerInfoText": "Pagina {0} di {1} ({2} elementi)",
+  "requiredFiled": "Campo obbligatorio",
+  "dateGreaterThan": "La data deve essere maggiore delle date della fase precedente",
+  "customer": "Cliente",
+  "columnChooser": "Selettore di colonne",
+  "duration": "Durata",
+  "minAllowedValueIs": "Il valore minimo consentito è {{value}}",
+  "maxAllowedValueIs": "Il valore massimo consentito è {{value}}",
+  "calendar": {
+    "months": [
+      "Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno",
+      "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"
+    ],
+    "days": [
+      "Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"
+    ],
+    "firstDayOfWeek": 1
+  },
+  "filters": {
+    "contains": "Contiene",
+    "notContains": "Non contiene",
+    "startsWith": "Inizia con",
+    "endsWith": "Termina con",
+    "equal": "Uguale",
+    "notEqual": "Non uguale",
+    "between": "Tra",
+    "lessThan": "Minore di",
+    "lessThanOrEqual": "Minore o uguale a",
+    "greaterThan": "Maggiore di",
+    "greaterThanOrEqual": "Maggiore o uguale a"
+  },
+  "time": {
+    "d": "g",
+    "days": "Giorni",
+    "h": "o",
+    "hours": "Ore",
+    "m": "m",
+    "minutes": "Minuti"
+  },
+  "order": {
+    "order": "Ordine",
+    "orderNumber": "Numero Ordine",
+    "cuttingScheduledDate": "Data pianificata di taglio",
+    "cuttingStartDate": "Data di inizio del taglio",
+    "cuttingEndDate": "Data di fine del taglio",
+    "preparationScheduledDate": "Data pianificata di preparazione",
+    "preparationStartDate": "Data di inizio della preparazione",
+    "preparationEndDate": "Data di fine della preparazione",
+    "bendingScheduledDate": "Data pianificata di piegatura",
+    "bendingStartDate": "Data di inizio della piegatura",
+    "bendingEndDate": "Data di fine della piegatura",
+    "assemblyScheduledDate": "Data pianificata di assemblaggio",
+    "assemblyStartDate": "Data di inizio dell'assemblaggio",
+    "assemblyEndDate": "Data di fine dell'assemblaggio",
+    "cuttingDuration": "Durata del taglio",
+    "preparationDuration": "Durata della preparazione",
+    "bendingDuration": "Durata della piegatura",
+    "assemblyDuration": "Durata dell'assemblaggio",
+    "removingConfirmation": "Sei sicuro di voler eliminare l'ordine {{orderNumber}}?",
+    "orderInProcess": "Ordine in elaborazione...",
+    "orderCompeted": "Ordine completato!",
+    "summary": {
+      "title": "Riepilogo totale",
+      "calculatedOnRecords": "Calcolato su {{count}} record"
+    }
+  },
+  "cutting" : "Taglio",
+  "preparation" : "Preparazione",
+  "bending" : "Piegatura",
+  "assembly" : "Assemblaggio",
+  "note": "Nota",
+  "saveNote": "Salva nota"
+}

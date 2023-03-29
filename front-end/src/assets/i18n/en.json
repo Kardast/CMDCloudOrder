@@ -1,0 +1,86 @@
+{
+  "loading": "lodaing...",
+  "add": "Add",
+  "edit": "Edit",
+  "remove": "Remove",
+  "save": "Save",
+  "ok": "OK",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "abort": "Abort",
+  "reset": "Reset",
+  "start": "Start",
+  "finish": "Finish",
+  "pagerInfoText": "Page {0} of {1} ({2} items)",
+  "requiredFiled": "Required filed",
+  "dateGreaterThan": "The date must be greater than the previous stage dates",
+  "customer": "Customer",
+  "columnChooser": "Column Chooser",
+  "duration": "Duration",
+  "minAllowedValueIs": "Min allowed value is {{value}}",
+  "maxAllowedValueIs": "Max allowed value is {{value}}",
+  "calendar": {
+    "months": [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ],
+    "days": [
+      "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+    ],
+    "firstDayOfWeek": 0
+  },
+  "filters": {
+    "contains": "Contains",
+    "notContains": "Does not contain",
+    "startsWith": "Starts with",
+    "endsWith": "Ends with",
+    "equal": "Equals",
+    "notEqual": "Does not equal",
+    "between": "Between",
+    "lessThan": "Less than",
+    "lessThanOrEqual": "Less than or equal to",
+    "greaterThan": "Greater than",
+    "greaterThanOrEqual": "Greater than or equal to"
+  },
+  "time": {
+    "d": "d",
+    "days": "Days",
+    "h": "h",
+    "hours": "Hours",
+    "m": "m",
+    "minutes": "Minutes"
+  },
+  "order": {
+    "order": "Order",
+    "orderNumber": "Order Number",
+    "cuttingScheduledDate": "Cutting Scheduled Date",
+    "cuttingStartDate": "Cutting Start Date",
+    "cuttingEndDate": "Cutting End Date",
+    "preparationScheduledDate": "Preparation Scheduled Date",
+    "preparationStartDate": "Preparation Start Date",
+    "preparationEndDate": "Preparation End Date",
+    "bendingScheduledDate": "Bending Scheduled Date",
+    "bendingStartDate": "Bending Start Date",
+    "bendingEndDate": "Bending End Date",
+    "assemblyScheduledDate": "Assembly Scheduled Date",
+    "assemblyStartDate": "Assembly Start Date",
+    "assemblyEndDate": "Assembly End Date",
+    "cuttingDuration": "Cutting Duration",
+    "preparationDuration": "Preparation Duration",
+    "bendingDuration": "Bending Duration",
+    "assemblyDuration": "Assembly Duration",
+    "removingConfirmation": "Are you sure you want to delete the order {{orderNumber}}?",
+    "orderInProcess": "Order in process...",
+    "orderCompeted": "Order competed!",
+    "summary": {
+      "title": "Total Summary",
+      "calculatedOnRecords": "Calculated on {{count}} records"
+    }
+  },
+  "cutting" : "Cutting",
+  "preparation" : "Preparation",
+  "bending" : "Bending",
+  "assembly" : "Assembly",
+  "note": "Note",
+  "saveNote": "Save Note"
+}

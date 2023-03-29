@@ -1,0 +1,83 @@
+<h1 mat-dialog-title>{{ "order.order" | transloco }}</h1>
+<mat-dialog-content>
+  <form [formGroup]="form" *ngIf="form != null">
+
+    <div class="flex gap-2">
+      <mat-form-field class="flex-grow">
+        <mat-label>{{ "customer" | transloco }}</mat-label>
+        <input formControlName="customer" matInput type="string" required>
+        <mat-error>{{ "requiredFiled" | transloco }}</mat-error>
+      </mat-form-field>
+      <mat-form-field class="flex-grow">
+        <mat-label>{{ "order.orderNumber" | transloco }}</mat-label>
+        <input formControlName="orderNumber" matInput type="string" required>
+        <mat-error>{{ "requiredFiled" | transloco }}</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div>
+      <mat-form-field [style.width.%]="100">
+        <mat-label>{{ "order.cuttingScheduledDate" | transloco }}</mat-label>
+        <input formControlName="cuttingScheduledDate" matInput placeholder="dd/MM/YYYY"
+          [matDatepicker]="cuttingScheduledDatePicker">
+        <mat-datepicker-toggle matIconSuffix [for]="cuttingScheduledDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #cuttingScheduledDatePicker></mat-datepicker>
+        <mat-error>
+          {{ "dateGreaterThan" | transloco }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div>
+      <mat-form-field [style.width.%]="100">
+        <mat-label>{{ "order.preparationScheduledDate" | transloco }}</mat-label>
+        <input formControlName="preparationScheduledDate" matInput placeholder="dd/MM/YYYY"
+          [matDatepicker]="preparationScheduledDatePicker">
+        <mat-datepicker-toggle matIconSuffix [for]="preparationScheduledDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #preparationScheduledDatePicker></mat-datepicker>
+        <mat-error>
+          {{ "dateGreaterThan" | transloco }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div>
+      <mat-form-field [style.width.%]="100">
+        <mat-label>{{ "order.bendingScheduledDate" | transloco }}</mat-label>
+        <input formControlName="bendingScheduledDate" matInput placeholder="dd/MM/YYYY"
+          [matDatepicker]="bendingScheduledDatePicker">
+        <mat-datepicker-toggle matIconSuffix [for]="bendingScheduledDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #bendingScheduledDatePicker></mat-datepicker>
+        <mat-error>
+          {{ "dateGreaterThan" | transloco }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div>
+      <mat-form-field [style.width.%]="100">
+        <mat-label>{{ "order.assemblyScheduledDate" | transloco }}</mat-label>
+        <input formControlName="assemblyScheduledDate" matInput placeholder="dd/MM/YYYY"
+          [matDatepicker]="assemblyScheduledDatePicker">
+        <mat-datepicker-toggle matIconSuffix [for]="assemblyScheduledDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #assemblyScheduledDatePicker></mat-datepicker>
+        <mat-error>
+          {{ "dateGreaterThan" | transloco }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div>
+      <mat-form-field [style.width.%]="100">
+        <mat-label>{{ "note" | transloco }}</mat-label>
+        <textarea formControlName="note" matInput></textarea>
+      </mat-form-field>
+    </div>
+  </form>
+
+</mat-dialog-content>
+
+<mat-dialog-actions [align]="'center'">
+  <button mat-raised-button mat-dialog-close (click)="save()">{{'save' | transloco}}</button>
+  <button mat-raised-button mat-dialog-close (click)="abort()">{{'cancel' | transloco}}</button>
+</mat-dialog-actions>
