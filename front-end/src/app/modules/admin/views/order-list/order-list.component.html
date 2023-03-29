@@ -1,0 +1,77 @@
+  <!-- COMPONENT THAT MANAGES CREATE AND UPDATE -->
+  <app-order-form
+    [focusedOrder]="focusedOrder"
+    [orderCreate$]="orderCreate$"
+    [orderUpdate$]="orderUpdate$">
+  </app-order-form>
+
+<div>
+    <p>Search an Order</p>
+    <div class="filtersWrapper">
+        <div class="filter">
+            <mat-form-field class="example-full-width">
+                <mat-label>Search by customer</mat-label>
+                <!-- <input type="text" matInput [(ngModel)]="searchCustomer" placeholder="Write..." -->
+                <input type="text" matInput placeholder="Write..." (keyup)="searchCustomerKeyUp()">
+            </mat-form-field>
+        </div>
+        <div class="filter">
+            <mat-form-field class="example-full-width">
+                <mat-label>Search by order number</mat-label>
+                <!-- <input type="text" matInput [(ngModel)]="searchOrderNumber" placeholder="Write..." -->
+                <input type="text" matInput placeholder="Write..." (keyup)="searchOrderNumberKeyUp()">
+            </mat-form-field>
+        </div>
+    </div>
+</div>
+
+<table class="ordersTable" mat-table [dataSource]="orders">
+    <!-- <table class="ordersTable" mat-table> -->
+    <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> Id</th>
+        <td mat-cell class="table-cell" *matCellDef="let order">{{order.id}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="customer">
+        <th mat-header-cell *matHeaderCellDef> customer</th>
+        <td mat-cell class="table-cell" *matCellDef="let order">{{order.customer}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="orderNumber">
+        <th mat-header-cell *matHeaderCellDef> orderNumber</th>
+        <td mat-cell class="table-cell" *matCellDef="let order">{{order.orderNumber}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="cuttingDate">
+        <th mat-header-cell *matHeaderCellDef> cuttingDate</th>
+        <td mat-cell class="table-cell" *matCellDef="let order">{{order.cuttingDate | date: 'dd-MM-yyyy'}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="preparationDate">
+        <th mat-header-cell *matHeaderCellDef> preparationDate</th>
+        <td mat-cell class="table-cell" *matCellDef="let order">{{order.preparationDate | date: 'dd-MM-yyyy'}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="bendingDate">
+        <th mat-header-cell *matHeaderCellDef> bendingDate</th>
+        <td mat-cell class="table-cell" *matCellDef="let order">{{order.bendingDate | date: 'dd-MM-yyyy'}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="assemblyDate">
+        <th mat-header-cell *matHeaderCellDef> assemblyDate</th>
+        <td mat-cell class="table-cell" *matCellDef="let order">{{order.assemblyDate | date: 'dd-MM-yyyy'}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef> action </th>
+        <td mat-cell class="table-cell" *matCellDef="let order">
+            <button (click)="deleteOrder(order, $event)" mat-icon-button class="transparent">
+                <mat-icon>delete</mat-icon>
+            </button>
+        </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+    <tr class="orderRow" mat-row *matRowDef="let rowOrder; columns: columnsToDisplay"
+        (click)="this.focusedOrder.next(rowOrder)"></tr>
+</table>

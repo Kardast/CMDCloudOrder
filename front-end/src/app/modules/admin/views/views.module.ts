@@ -17,46 +17,54 @@ import { FullCalendarModule } from '@fullcalendar/angular';
 import { OrdersStoreService } from './order-list/orders.store.service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { OrdersOdataInterceptor } from './order-list/orders-odata.interceptor';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTableModule } from '@angular/material/table';
+import { OrderFormComponent } from './order-list/order-form/order-form.component';
+
 
 @NgModule({
-  declarations: [
-    OrderListComponent,
-    OrdersCalendarComponent
-  ],
-  exports: [
-    OrderListComponent,
-    OrdersCalendarComponent
-  ],
-  imports: [
-    CommonModule,
-    DxTreeListModule,
-    DxDataGridModule,
-    TranslocoCoreModule,
-    MatButtonModule,
-    ReactiveFormsModule,
-    DialogsModule,
-    MatInputModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    NgxMatDatetimePickerModule,
-    NgxMatNativeDateModule,
-    MatFormFieldModule,
-    MatCardModule,
-    FullCalendarModule,
-  ],
+    declarations: [
+        OrderListComponent,
+        OrdersCalendarComponent,
+        OrderFormComponent
+    ],
+    exports: [
+        OrderListComponent,
+        OrdersCalendarComponent,
+        OrderFormComponent
+    ],
+    imports: [
+        CommonModule,
+        DxTreeListModule,
+        DxDataGridModule,
+        TranslocoCoreModule,
+        MatButtonModule,
+        ReactiveFormsModule,
+        DialogsModule,
+        MatInputModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        NgxMatDatetimePickerModule,
+        NgxMatNativeDateModule,
+        MatFormFieldModule,
+        MatCardModule,
+        FullCalendarModule,
+        MatIconModule,
+        MatTableModule
+    ],
 })
 export class ViewsModule {
-  static forRoot(): ModuleWithProviders<ViewsModule> {
-    return {
-      ngModule: ViewsModule,
-      providers: [
-        OrdersStoreService,
-        {
-          provide: HTTP_INTERCEPTORS,
-          useClass: OrdersOdataInterceptor,
-          multi: true
-        }
-      ]
-    };
-  }
+    static forRoot(): ModuleWithProviders<ViewsModule> {
+        return {
+            ngModule: ViewsModule,
+            providers: [
+                OrdersStoreService,
+                {
+                    provide: HTTP_INTERCEPTORS,
+                    useClass: OrdersOdataInterceptor,
+                    multi: true
+                }
+            ]
+        };
+    }
 }
