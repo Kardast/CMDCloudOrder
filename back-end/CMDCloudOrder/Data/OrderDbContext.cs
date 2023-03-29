@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using CMDCloudOrder.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -8,15 +7,15 @@ namespace CMDCloudOrder.Data;
 public class OrderDbContext : DbContext
 {
     public DbSet<Order> Orders { get; set; } = null!;
-    
+
     public OrderDbContext(DbContextOptions<OrderDbContext> options) : base(options)
     {
     }
-    
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlServer(
-            "data source=db5eb13a5470;initial catalog=cmd-db;user id=sa;password=myPassword7941;TrustServerCertificate=True;");
+            "data source=db5eb13a5470;initial catalog=cmd-db;user id=sa;password=yourStrong(!)Password;TrustServerCertificate=True;");
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
