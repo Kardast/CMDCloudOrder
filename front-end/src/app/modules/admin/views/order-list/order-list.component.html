@@ -3,7 +3,7 @@
 </app-order-form>
 
 <app-order-filter [searchFilter$]="searchFilter$"></app-order-filter>
-<div class="ordersTable">
+
     <table mat-table [dataSource]="dataSource">
         <ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef> Id</th>
@@ -54,11 +54,12 @@
             (click)="this.focusedOrder.next(rowOrder)"></tr>
     </table>
     <mat-paginator
+      class="margin"
       [pageSizeOptions]="[5, 10, 20]"
       #paginator
       showFirstLastButtons
     ></mat-paginator>
-</div>
+
 
 
 <app-orders-totals></app-orders-totals>
