@@ -20,6 +20,9 @@ import { OrdersOdataInterceptor } from './order-list/orders-odata.interceptor';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { OrderFormComponent } from './order-list/order-form/order-form.component';
+import { FormsModule } from '@angular/forms';
+import { environment } from 'environments/environment';
+import { API_BASE_URL } from 'app/core/services/api.service';
 
 
 @NgModule({
@@ -50,7 +53,8 @@ import { OrderFormComponent } from './order-list/order-form/order-form.component
         MatCardModule,
         FullCalendarModule,
         MatIconModule,
-        MatTableModule
+        MatTableModule,
+        FormsModule
     ],
 })
 export class ViewsModule {
@@ -58,6 +62,7 @@ export class ViewsModule {
         return {
             ngModule: ViewsModule,
             providers: [
+                { provide: API_BASE_URL, useValue: environment.baseUrl },
                 OrdersStoreService,
                 {
                     provide: HTTP_INTERCEPTORS,
