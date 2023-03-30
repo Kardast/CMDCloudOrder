@@ -24,6 +24,7 @@ import {MAT_DATE_LOCALE} from '@angular/material/core';
 import { FormsModule } from '@angular/forms';
 import { environment } from 'environments/environment';
 import { API_BASE_URL } from 'app/core/services/api.service';
+import {MatPaginatorModule} from '@angular/material/paginator';
 
 
 @NgModule({
@@ -55,7 +56,8 @@ import { API_BASE_URL } from 'app/core/services/api.service';
         FullCalendarModule,
         MatIconModule,
         MatTableModule,
-        FormsModule
+        FormsModule,
+        MatPaginatorModule
     ],
 })
 export class ViewsModule {
