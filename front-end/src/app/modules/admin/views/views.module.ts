@@ -42,6 +42,7 @@ import { OrderFilterComponent } from './order-list/order-filter/order-filter.com
         OrdersCalendarComponent,
         OrderFormComponent,
         OrdersTotalsComponent,
+        OrderFilterComponent
     ],
     imports: [
         CommonModule,

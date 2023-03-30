@@ -28,7 +28,6 @@ import { ViewsModule } from './modules/admin/views/views.module';
 import { TRANSLOCO_LOADER } from '@ngneat/transloco';
 import { ApplicationTranslocoHttpLoader } from './application-transloco-http-loader.service';
 import { API_BASE_URL } from './common/clients/api.clients';
-import { OrderFilterComponent } from './order-filter/order-filter.component';
 
 
 const routerConfig: ExtraOptions = {

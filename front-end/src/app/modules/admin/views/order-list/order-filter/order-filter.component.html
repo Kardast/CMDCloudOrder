@@ -1,1 +1,18 @@
-<p>order-filter works!</p>
+<div>
+    <div class="filtersWrapper">
+        <div class="filter">
+            <mat-form-field class="example-full-width">
+                <mat-label>Search by customer</mat-label>
+                <input type="text" matInput [(ngModel)]="searchCustomer" placeholder="Write..."
+                    (keyup)="searchCustomerKeyUp()">
+            </mat-form-field>
+        </div>
+        <div class="filter">
+            <mat-form-field class="example-full-width">
+                <mat-label>Search by order number</mat-label>
+                <input type="text" matInput [(ngModel)]="searchOrderNumber" placeholder="Write..."
+                    (keyup)="searchOrderNumberKeyUp()">
+            </mat-form-field>
+        </div>
+    </div>
+</div>
