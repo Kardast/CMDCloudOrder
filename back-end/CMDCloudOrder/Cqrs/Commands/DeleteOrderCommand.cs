@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CMDCloudOrder.Cqrs.Commands;
 
-public record DeleteOrderCommand(Order Order) : IRequest<Order>;
+public record DeleteOrderCommand(int Id) : IRequest<int>;
 
-internal class DeleteOrderCommandHandler : IRequestHandler<DeleteOrderCommand, Order>
+internal class DeleteOrderCommandHandler : IRequestHandler<DeleteOrderCommand, int>
 {
     private readonly OrderDbContext _db;
 
@@ -16,14 +16,13 @@ internal class DeleteOrderCommandHandler : IRequestHandler<DeleteOrderCommand, O
         _db = db;
     }
 
-    public async Task<Order> Handle(DeleteOrderCommand request, CancellationToken ct)
+    public async Task<int> Handle(DeleteOrderCommand request, CancellationToken ct)
     {
-        var order = await GetById(request.Order.Id);
-
-        if (order != null) _db.Remove(order);
+        var orderToRemove = await GetById(request.Id);
+        if (orderToRemove != null) _db.Remove(orderToRemove);
         await _db.SaveChangesAsync(ct);
-        return order!;
+        return request.Id;
     }
-    
+
     private Task<Order?> GetById(int id) => _db.Orders.FirstOrDefaultAsync(or => or.Id == id);
 }

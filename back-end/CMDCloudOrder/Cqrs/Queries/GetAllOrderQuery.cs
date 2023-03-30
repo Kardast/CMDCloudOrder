@@ -28,7 +28,7 @@ internal class GetAllOrdersHandler : IRequestHandler<GetAllOrderQuery, Order[]>
         {
             orders = orders.Where(order => order.OrderNumber.ToLower().Contains(request.OrderNumber.ToLower()));
         }
-        
+
         return orders.ToArrayAsync(ct);
     }
 }

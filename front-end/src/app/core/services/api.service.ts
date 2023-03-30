@@ -33,10 +33,9 @@ export interface IOrderClient {
      */
     update(body?: Order | undefined): Observable<void>;
     /**
-     * @param body (optional) 
      * @return Success
      */
-    delete(body?: Order | undefined): Observable<void>;
+    delete(id: number): Observable<void>;
 }
 
 @Injectable({
@@ -217,21 +216,19 @@ export class OrderClient implements IOrderClient {
     }
 
     /**
-     * @param body (optional) 
      * @return Success
      */
-    delete(body?: Order | undefined): Observable<void> {
-        let url_ = this.baseUrl + "/api/Order";
+    delete(id: number): Observable<void> {
+        let url_ = this.baseUrl + "/api/Order/Delete/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(body);
-
         let options_ : any = {
-            body: content_,
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
             })
         };
 
