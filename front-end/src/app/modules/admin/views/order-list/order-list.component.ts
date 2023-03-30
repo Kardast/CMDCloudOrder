@@ -5,7 +5,6 @@ import { BehaviorSubject, combineLatest, Observable, switchMap } from 'rxjs';
 import { Order, OrderClient } from 'app/core/services/api.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { map } from 'lodash';
 
 @UntilDestroy()
 @Component({
@@ -14,10 +13,7 @@ import { map } from 'lodash';
     styleUrls: ['./order-list.component.scss']
 })
 export class OrderListComponent {
-    searchCustomer: string = '';
-    searchOrderNumber: string = '';
     columnsToDisplay = ['id', 'customer', 'orderNumber', 'cuttingDate', 'preparationDate', 'bendingDate', 'assemblyDate', 'action'];
-    data: Order[];
     focusedOrder = new BehaviorSubject<Order | null>(null);
     searchFilter$ = new BehaviorSubject<{ customer?: string; orderNumber?: string }>({});
     orderCreate$ = new BehaviorSubject<Order | null>(null);
@@ -52,12 +48,6 @@ export class OrderListComponent {
 
         this.focusedOrder.next(null);
     }
-    searchCustomerKeyUp() {
-        this.searchFilter$.next({ ...this.searchFilter$.value, customer: this.searchCustomer });
-    }
-
-    searchOrderNumberKeyUp() {
-        this.searchFilter$.next({ ...this.searchFilter$.value, orderNumber: this.searchOrderNumber });
-    }
+   
 }
 
