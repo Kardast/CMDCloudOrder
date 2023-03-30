@@ -1,38 +1,37 @@
 <div class="orderForm" *ngIf="orderForm | async as order">
     <form [formGroup]="order" (ngSubmit)="onSubmit(order)">
-      <p>Create a new Order</p>
-      <mat-form-field class="margin example-full-width formInput">
+      <mat-form-field class="formInput">
         <mat-label>customer</mat-label>
         <input matInput type="text" formControlName="customer">
       </mat-form-field>
 
-      <mat-form-field class="margin example-full-width formInput">
+      <mat-form-field class="formInput">
         <mat-label>orderNumber</mat-label>
         <input matInput type="text" formControlName="orderNumber">
       </mat-form-field>
 
-      <mat-form-field class="margin example-full-width formInput">
+      <mat-form-field class="formInput">
         <mat-label>cuttingDate</mat-label>
         <input matInput [matDatepicker]="pickerCuttingDate" type="date" formControlName="cuttingDate">
         <mat-datepicker #pickerCuttingDate></mat-datepicker>
         <mat-datepicker-toggle matSuffix [for]="pickerCuttingDate"></mat-datepicker-toggle>
       </mat-form-field>
 
-      <mat-form-field class="margin example-full-width formInput">
+      <mat-form-field class="formInput">
         <mat-label>preparationDate</mat-label>
         <input matInput [matDatepicker]="pickerPreparationDate" type="date" formControlName="preparationDate">
         <mat-datepicker #pickerPreparationDate></mat-datepicker>
         <mat-datepicker-toggle matSuffix [for]="pickerPreparationDate"></mat-datepicker-toggle>
       </mat-form-field>
 
-      <mat-form-field class="margin example-full-width formInput">
+      <mat-form-field class="formInput">
         <mat-label>bendingDate</mat-label>
         <input matInput [matDatepicker]="pickerBendingDate" type="date" formControlName="bendingDate">
         <mat-datepicker #pickerBendingDate></mat-datepicker>
         <mat-datepicker-toggle matSuffix [for]="pickerBendingDate"></mat-datepicker-toggle>
       </mat-form-field>
 
-      <mat-form-field class="margin example-full-width formInput">
+      <mat-form-field class="formInput">
         <mat-label>assemblyDate</mat-label>
         <input matInput [matDatepicker]="pickerAssemblyDate" type="date" formControlName="assemblyDate">
         <mat-datepicker #pickerAssemblyDate></mat-datepicker>

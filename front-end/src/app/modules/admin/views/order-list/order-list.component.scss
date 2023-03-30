@@ -1,3 +1,10 @@
+.filtersWrapper {
+    display: flex;
+    justify-content: space-around;
+    input {
+        width: 100%;
+    }
+}
 .ordersTable{
     margin-bottom: 15px;
 }
