@@ -24,18 +24,21 @@ import {MAT_DATE_LOCALE} from '@angular/material/core';
 import { FormsModule } from '@angular/forms';
 import { environment } from 'environments/environment';
 import { API_BASE_URL } from 'app/core/services/api.service';
+import { OrdersTotalsComponent } from './order-list/orders-totals/orders-totals.component';
 
 
 @NgModule({
     declarations: [
         OrderListComponent,
         OrdersCalendarComponent,
-        OrderFormComponent
+        OrderFormComponent,
+        OrdersTotalsComponent,
     ],
     exports: [
         OrderListComponent,
         OrdersCalendarComponent,
-        OrderFormComponent
+        OrderFormComponent,
+        OrdersTotalsComponent,
     ],
     imports: [
         CommonModule,
