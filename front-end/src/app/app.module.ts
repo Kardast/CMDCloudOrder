@@ -13,7 +13,7 @@ import { AppComponent } from 'app/app.component';
 import { appRoutes } from 'app/app.routing';
 import { DxDataGridModule } from 'devextreme-angular';
 import { environment } from 'environments/environment';
-import { API_BASE_URL } from './common/clients/api.clients';
+
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
@@ -28,6 +28,7 @@ import { OrdersOdataInterceptor } from './modules/admin/views/order-list/orders-
 import { ViewsModule } from './modules/admin/views/views.module';
 import { TRANSLOCO_LOADER } from '@ngneat/transloco';
 import { ApplicationTranslocoHttpLoader } from './application-transloco-http-loader.service';
+import { API_BASE_URL } from './core/services/api.service';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
