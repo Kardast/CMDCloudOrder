@@ -29,13 +29,15 @@ import { OrdersTotalsComponent } from './order-list/orders-totals/orders-totals.
 import { OrderFilterComponent } from './order-list/order-filter/order-filter.component';
 
 
+
+
 @NgModule({
     declarations: [
         OrderListComponent,
         OrdersCalendarComponent,
         OrderFormComponent,
         OrdersTotalsComponent,
-        OrderFilterComponent
+        OrderFilterComponent,
     ],
     exports: [
         OrderListComponent,
