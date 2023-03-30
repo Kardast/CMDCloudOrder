@@ -21,7 +21,7 @@ export interface IOrderClient {
      * @param orderNumber (optional) 
      * @return Success
      */
-    list(customer?: string | undefined, orderNumber?: string | undefined): Observable<void>;
+    list(customer?: string | undefined, orderNumber?: string | undefined): Observable<Order[]>;
     /**
      * @param body (optional) 
      * @return Success
@@ -57,7 +57,7 @@ export class OrderClient implements IOrderClient {
      * @param orderNumber (optional) 
      * @return Success
      */
-    list(customer?: string | undefined, orderNumber?: string | undefined): Observable<void> {
+    list(customer?: string | undefined, orderNumber?: string | undefined): Observable<Order[]> {
         let url_ = this.baseUrl + "/api/Order/List?";
         if (customer === null)
             throw new Error("The parameter 'customer' cannot be null.");
@@ -73,6 +73,7 @@ export class OrderClient implements IOrderClient {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept": "text/plain"
             })
         };
 
@@ -83,14 +84,14 @@ export class OrderClient implements IOrderClient {
                 try {
                     return this.processList(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
+                    return _observableThrow(e) as any as Observable<Order[]>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<void>;
+                return _observableThrow(response_) as any as Observable<Order[]>;
         }));
     }
 
-    protected processList(response: HttpResponseBase): Observable<void> {
+    protected processList(response: HttpResponseBase): Observable<Order[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -99,7 +100,9 @@ export class OrderClient implements IOrderClient {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return _observableOf(null as any);
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Order[];
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -276,7 +279,7 @@ export interface Order {
     assemblyDate?: string | undefined;
 }
 
-export class SwaggerException extends Error {
+export class ApiException extends Error {
     override message: string;
     status: number;
     response: string;
@@ -293,10 +296,10 @@ export class SwaggerException extends Error {
         this.result = result;
     }
 
-    protected isSwaggerException = true;
+    protected isApiException = true;
 
-    static isSwaggerException(obj: any): obj is SwaggerException {
-        return obj.isSwaggerException === true;
+    static isApiException(obj: any): obj is ApiException {
+        return obj.isApiException === true;
     }
 }
 
@@ -304,7 +307,7 @@ function throwException(message: string, status: number, response: string, heade
     if (result !== null && result !== undefined)
         return _observableThrow(result);
     else
-        return _observableThrow(new SwaggerException(message, status, response, headers, null));
+        return _observableThrow(new ApiException(message, status, response, headers, null));
 }
 
 function blobToText(blob: any): Observable<string> {
