@@ -5,7 +5,6 @@ import { BehaviorSubject, combineLatest, Observable, switchMap } from 'rxjs';
 import { Order, OrderClient } from 'app/core/services/api.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { map } from 'lodash';
 
 @UntilDestroy()
 @Component({

@@ -25,13 +25,15 @@ import { FormsModule } from '@angular/forms';
 import { environment } from 'environments/environment';
 import { API_BASE_URL } from 'app/core/services/api.service';
 import {MatPaginatorModule} from '@angular/material/paginator';
+import { OrderFilterComponent } from './order-list/order-filter/order-filter.component';
 
 
 @NgModule({
     declarations: [
         OrderListComponent,
         OrdersCalendarComponent,
-        OrderFormComponent
+        OrderFormComponent,
+        OrderFilterComponent
     ],
     exports: [
         OrderListComponent,
