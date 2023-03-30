@@ -11,10 +11,6 @@ import { Order, OrderClient } from 'app/core/services/api.service';
     styleUrls: ['./order-list.component.scss']
 })
 export class OrderListComponent {
-    // @Input() focusedOrder = new BehaviorSubject<Order | null>(null);
-    // @Input() orderCreate$ = new BehaviorSubject<Order | null>(null);
-    // @Input() orderUpdate$ = new BehaviorSubject<Order | null>(null);
-
     searchCustomer: string = '';
     searchOrderNumber: string = '';
     columnsToDisplay = ['id', 'customer', 'orderNumber', 'cuttingDate', 'preparationDate', 'bendingDate', 'assemblyDate', 'action'];

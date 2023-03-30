@@ -35,6 +35,6 @@ internal class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCommand, O
         await _db.SaveChangesAsync(cancellationToken);
         return order;
     }
-    
+
     private Task<Order?> GetById(int id) => _db.Orders.FirstOrDefaultAsync(or => or.Id == id);
 }

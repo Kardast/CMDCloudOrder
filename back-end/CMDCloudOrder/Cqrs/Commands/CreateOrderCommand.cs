@@ -14,7 +14,7 @@ internal class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, O
     {
         _db = db;
     }
-    
+
     public async Task<Order> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
     {
         _db.Add(request.Order);
