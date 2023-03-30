@@ -25,6 +25,7 @@ import { FormsModule } from '@angular/forms';
 import { environment } from 'environments/environment';
 import { API_BASE_URL } from 'app/core/services/api.service';
 import {MatPaginatorModule} from '@angular/material/paginator';
+import { OrdersTotalsComponent } from './order-list/orders-totals/orders-totals.component';
 import { OrderFilterComponent } from './order-list/order-filter/order-filter.component';
 
 
@@ -33,12 +34,14 @@ import { OrderFilterComponent } from './order-list/order-filter/order-filter.com
         OrderListComponent,
         OrdersCalendarComponent,
         OrderFormComponent,
+        OrdersTotalsComponent,
         OrderFilterComponent
     ],
     exports: [
         OrderListComponent,
         OrdersCalendarComponent,
-        OrderFormComponent
+        OrderFormComponent,
+        OrdersTotalsComponent,
     ],
     imports: [
         CommonModule,

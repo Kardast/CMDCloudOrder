@@ -38,8 +38,7 @@ const routerConfig: ExtraOptions = {
 
 @NgModule({
     declarations: [
-        AppComponent,
-        OrderFilterComponent,
+        AppComponent
     ],
     imports: [
         BrowserModule,
