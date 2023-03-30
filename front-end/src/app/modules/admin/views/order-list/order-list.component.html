@@ -11,22 +11,19 @@
         <div class="filter">
             <mat-form-field class="example-full-width">
                 <mat-label>Search by customer</mat-label>
-                <!-- <input type="text" matInput [(ngModel)]="searchCustomer" placeholder="Write..." -->
-                <input type="text" matInput placeholder="Write..." (keyup)="searchCustomerKeyUp()">
+                <input type="text" matInput [(ngModel)]="searchCustomer" placeholder="Write..." (keyup)="searchCustomerKeyUp()">
             </mat-form-field>
         </div>
         <div class="filter">
             <mat-form-field class="example-full-width">
                 <mat-label>Search by order number</mat-label>
-                <!-- <input type="text" matInput [(ngModel)]="searchOrderNumber" placeholder="Write..." -->
-                <input type="text" matInput placeholder="Write..." (keyup)="searchOrderNumberKeyUp()">
+                <input type="text" matInput [(ngModel)]="searchOrderNumber" placeholder="Write..." (keyup)="searchOrderNumberKeyUp()">
             </mat-form-field>
         </div>
     </div>
 </div>
 
-<table class="ordersTable" mat-table [dataSource]="orders">
-    <!-- <table class="ordersTable" mat-table> -->
+<table class="ordersTable" mat-table [dataSource]="orders$">
     <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef> Id</th>
         <td mat-cell class="table-cell" *matCellDef="let order">{{order.id}}</td>

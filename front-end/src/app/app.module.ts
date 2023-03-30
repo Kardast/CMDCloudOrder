@@ -27,7 +27,8 @@ import { OrdersOdataInterceptor } from './modules/admin/views/order-list/orders-
 import { ViewsModule } from './modules/admin/views/views.module';
 import { TRANSLOCO_LOADER } from '@ngneat/transloco';
 import { ApplicationTranslocoHttpLoader } from './application-transloco-http-loader.service';
-import { API_BASE_URL } from './core/services/api.service';
+import { API_BASE_URL } from './common/clients/api.clients';
+
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,

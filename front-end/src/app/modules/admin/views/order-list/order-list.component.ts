@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import 'devextreme/data/odata/store';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { BehaviorSubject, combineLatest, Observable, switchMap } from 'rxjs';
-import { Order } from 'app/common/clients/api.clients';
+import { Order, OrderClient } from 'app/core/services/api.service';
 
 @UntilDestroy()
 @Component({
@@ -11,65 +11,25 @@ import { Order } from 'app/common/clients/api.clients';
     styleUrls: ['./order-list.component.scss']
 })
 export class OrderListComponent {
-    @Input() focusedOrder = new BehaviorSubject<Order | null>(null);
-    @Input() orderCreate$ = new BehaviorSubject<Order | null>(null);
-    @Input() orderUpdate$ = new BehaviorSubject<Order | null>(null);
+    // @Input() focusedOrder = new BehaviorSubject<Order | null>(null);
+    // @Input() orderCreate$ = new BehaviorSubject<Order | null>(null);
+    // @Input() orderUpdate$ = new BehaviorSubject<Order | null>(null);
 
     searchCustomer: string = '';
     searchOrderNumber: string = '';
     columnsToDisplay = ['id', 'customer', 'orderNumber', 'cuttingDate', 'preparationDate', 'bendingDate', 'assemblyDate', 'action'];
 
+    focusedOrder = new BehaviorSubject<Order | null>(null);
     searchFilter$ = new BehaviorSubject<{ customer?: string; orderNumber?: string }>({});
+    orderCreate$ = new BehaviorSubject<Order | null>(null);
+    orderUpdate$ = new BehaviorSubject<Order | null>(null);
     orderDelete$ = new BehaviorSubject<Order | null>(null);
     orders$ = new Observable<Order[]>;
 
-    orders = [
-        {
-            id: 1,
-            customer: "test",
-            orderNumber: "12/12/2012",
-            cuttingDate: "12/12/2012",
-            preparationDate: "12/12/2012",
-            bendingDate: "12/12/2012",
-            assemblyDate: "12/12/2012",
-        },
-        {
-            id: 1,
-            customer: "test",
-            orderNumber: "12/12/2012",
-            cuttingDate: "12/12/2012",
-            preparationDate: "12/12/2012",
-            bendingDate: "12/12/2012",
-            assemblyDate: "12/12/2012",
-        }, {
-            id: 1,
-            customer: "test",
-            orderNumber: "12/12/2012",
-            cuttingDate: "12/12/2012",
-            preparationDate: "12/12/2012",
-            bendingDate: "12/12/2012",
-            assemblyDate: "12/12/2012",
-        }, {
-            id: 1,
-            customer: "test",
-            orderNumber: "12/12/2012",
-            cuttingDate: "12/12/2012",
-            preparationDate: "12/12/2012",
-            bendingDate: "12/12/2012",
-            assemblyDate: "12/12/2012",
-        },
-    ]
-
-
-
-    // ngOnChanges(): void {
-    //   this.orders$ = combineLatest([this.searchFilter$, this.orderCreate$, this.orderUpdate$, this.orderDelete$])
-    //     .pipe(switchMap(([filter]) => this.orderClient.list(filter.customer, filter.orderNumber)));
-    // }
-
-    // constructor(private orderClient: OrderClient) { }
-    constructor() { }
-
+    constructor(private orderClient: OrderClient) {
+        this.orders$ = combineLatest([this.searchFilter$, this.orderCreate$, this.orderUpdate$, this.orderDelete$])
+            .pipe(switchMap(([filter]) => this.orderClient.list(filter.customer, filter.orderNumber)));
+    }
 
     deleteOrder(order: any, event: MouseEvent) {
         event.stopPropagation();
@@ -78,9 +38,9 @@ export class OrderListComponent {
             return;
         }
 
-        //   this.orderClient
-        //     .delete(order.id)
-        //     .subscribe(() => this.orderDelete$.next(order));
+        this.orderClient
+            .delete(order.id)
+            .subscribe(() => this.orderDelete$.next(order));
 
         this.focusedOrder.next(null);
     }
