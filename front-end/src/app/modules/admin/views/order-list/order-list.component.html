@@ -69,11 +69,6 @@
     <tr class="orderRow" mat-row *matRowDef="let rowOrder; columns: columnsToDisplay"
         (click)="this.focusedOrder.next(rowOrder)"></tr>
 </table>
-<mat-paginator
-  #paginatorPageSize
-  [pageSizeOptions]="[5, 10, 20]"
-  #paginator
-  showFirstLastButtons
-></mat-paginator>
+<mat-paginator #paginatorPageSize [pageSizeOptions]="[5, 10, 20]" #paginator showFirstLastButtons></mat-paginator>
 
-<app-orders-totals></app-orders-totals>
+<app-orders-totals [orders$]="orders$"></app-orders-totals>
