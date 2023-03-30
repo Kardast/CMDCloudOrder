@@ -1,12 +1,12 @@
-
-.margin{
 .filtersWrapper {
     display: flex;
     justify-content: space-around;
+
     input {
         width: 100%;
     }
 }
-mat-paginator{
+
+mat-paginator {
     margin-bottom: 15px;
 }

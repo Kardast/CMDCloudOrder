@@ -14,6 +14,7 @@ export class OrdersTotalsComponent {
     totalBendingTime = 0;
     totalPreparationTime = 0;
     totalCuttingTime = 0;
+    totalRecords = 0;
 
     constructor(private orderClient: OrderClient) {
         this.orders$ = this.orderClient.list();
@@ -22,14 +23,9 @@ export class OrdersTotalsComponent {
 
     getTotalDays() {
         this.orders$.subscribe(orders => {
-            let previousAssemblyDate: Date;
-            orders.forEach((order, index) => {
+            orders.forEach((order) => {
                 let assemblyDate = new Date(order.assemblyDate);
-                let secondDate = previousAssemblyDate || assemblyDate;
-                this.totalAssemblyTime += this.getDiffDays(assemblyDate, secondDate);
-                if (index === 0) {
-                    previousAssemblyDate = assemblyDate; // set previous date to current date on first iteration
-                }
+                this.totalAssemblyTime ++;
 
                 let preparationDate = new Date(order.preparationDate);
                 this.totalPreparationTime += this.getDiffDays(assemblyDate, preparationDate);
@@ -39,6 +35,8 @@ export class OrdersTotalsComponent {
 
                 let cuttingDate = new Date(order.cuttingDate);
                 this.totalCuttingTime += this.getDiffDays(assemblyDate, cuttingDate);
+
+                this.totalRecords ++;
             });
         });
     }
