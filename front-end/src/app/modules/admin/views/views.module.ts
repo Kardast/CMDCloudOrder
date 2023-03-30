@@ -20,6 +20,7 @@ import { OrdersOdataInterceptor } from './order-list/orders-odata.interceptor';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { OrderFormComponent } from './order-list/order-form/order-form.component';
+import {MAT_DATE_LOCALE} from '@angular/material/core';
 import { FormsModule } from '@angular/forms';
 import { environment } from 'environments/environment';
 import { API_BASE_URL } from 'app/core/services/api.service';
@@ -64,11 +65,12 @@ export class ViewsModule {
             providers: [
                 { provide: API_BASE_URL, useValue: environment.baseUrl },
                 OrdersStoreService,
+                { provide: MAT_DATE_LOCALE, useValue: 'af' },
                 {
                     provide: HTTP_INTERCEPTORS,
                     useClass: OrdersOdataInterceptor,
                     multi: true
-                }
+                },
             ]
         };
     }
