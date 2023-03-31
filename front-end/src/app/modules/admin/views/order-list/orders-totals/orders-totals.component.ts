@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { Order, OrderClient } from 'app/core/services/api.service';
-import { BehaviorSubject, combineLatest, Observable, switchMap } from 'rxjs';
+import { Order } from 'app/core/services/api.service';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'app-orders-totals',
@@ -14,35 +14,31 @@ export class OrdersTotalsComponent {
     totalBendingTime = 0;
     totalPreparationTime = 0;
     totalCuttingTime = 0;
-    totalRecords = 0;
 
     ngOnChanges() {
-        this.updateTotals()
+        this.updateTotals();
     }
 
     updateTotals() {
         this.orders$.subscribe(orders => {
-
-            this.totalAssemblyTime = 0;
-            this.totalBendingTime = 0;
-            this.totalPreparationTime = 0;
-            this.totalCuttingTime = 0;
-            this.totalRecords = 0;
-            this.totalRecords = orders.length;
-
-            orders.forEach((order) => {
-                let assemblyDate = new Date(order.assemblyDate);
-                this.totalAssemblyTime++;
-
-                let preparationDate = new Date(order.preparationDate);
-                this.totalPreparationTime += this.getDiffDays(assemblyDate, preparationDate);
-
-                let bendingDate = new Date(order.bendingDate);
-                this.totalBendingTime += this.getDiffDays(assemblyDate, bendingDate);
-
-                let cuttingDate = new Date(order.cuttingDate);
-                this.totalCuttingTime += this.getDiffDays(assemblyDate, cuttingDate);
-            });
+            this.totalAssemblyTime = orders.reduce((acc) => {
+                return acc + 1;
+            }, 0);
+            this.totalPreparationTime = orders.reduce((acc, order) => {
+                const assemblyDate = new Date(order.assemblyDate);
+                const preparationDate = new Date(order.preparationDate);
+                return acc + this.getDiffDays(assemblyDate, preparationDate);
+            }, 0);
+            this.totalBendingTime = orders.reduce((acc, order) => {
+                const assemblyDate = new Date(order.assemblyDate);
+                const bendingDate = new Date(order.bendingDate);
+                return acc + this.getDiffDays(assemblyDate, bendingDate);
+            }, 0);
+            this.totalCuttingTime = orders.reduce((acc, order) => {
+                const assemblyDate = new Date(order.assemblyDate);
+                const cuttingDate = new Date(order.cuttingDate);
+                return acc + this.getDiffDays(assemblyDate, cuttingDate);
+            }, 0);
         });
     }
 
