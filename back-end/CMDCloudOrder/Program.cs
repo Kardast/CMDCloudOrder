@@ -14,12 +14,12 @@ builder.Services.AddSwagger();
 builder.Services.AddNSwag();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors();
+
 // Dependency Injection
 builder.Services.AddDbContext<OrderDbContext>();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
 var app = builder.Build();
-
 
 app.Services.CreateScope().ServiceProvider.GetRequiredService<OrderDbContext>().Database.Migrate();
 
