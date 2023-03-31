@@ -19,7 +19,7 @@ export class OrderListComponent {
     orderCreate$ = new BehaviorSubject<Order | null>(null);
     orderUpdate$ = new BehaviorSubject<Order | null>(null);
     orderDelete$ = new BehaviorSubject<Order | null>(null);
-    orders$: Observable<Order[]>;
+    orders$ = new Observable<Order[]>;
     dataSource = new MatTableDataSource<Order>();
     @ViewChild('paginator') paginator: MatPaginator;
 
@@ -48,6 +48,4 @@ export class OrderListComponent {
 
         this.focusedOrder.next(null);
     }
-   
 }
-

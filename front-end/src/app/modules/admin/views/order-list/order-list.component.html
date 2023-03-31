@@ -1,45 +1,45 @@
-<!-- COMPONENT THAT MANAGES CREATE AND UPDATE -->
-<app-order-form [focusedOrder]="focusedOrder" [orderCreate$]="orderCreate$" [orderUpdate$]="orderUpdate$">
-</app-order-form>
+<app-order-form [focusedOrder]="focusedOrder" [orderCreate$]="orderCreate$"
+    [orderUpdate$]="orderUpdate$"></app-order-form>
 
 <app-order-filter [searchFilter$]="searchFilter$"></app-order-filter>
 
+<div class="margin">
     <table mat-table [dataSource]="dataSource">
         <ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef> Id</th>
             <td mat-cell class="table-cell" *matCellDef="let order">{{order.id}}</td>
         </ng-container>
-    
+
         <ng-container matColumnDef="customer">
             <th mat-header-cell *matHeaderCellDef> customer</th>
             <td mat-cell class="table-cell" *matCellDef="let order">{{order.customer}}</td>
         </ng-container>
-    
+
         <ng-container matColumnDef="orderNumber">
             <th mat-header-cell *matHeaderCellDef> orderNumber</th>
             <td mat-cell class="table-cell" *matCellDef="let order">{{order.orderNumber}}</td>
         </ng-container>
-    
+
         <ng-container matColumnDef="cuttingDate">
             <th mat-header-cell *matHeaderCellDef> cuttingDate</th>
             <td mat-cell class="table-cell" *matCellDef="let order">{{order.cuttingDate | date: 'dd-MM-yyyy'}}</td>
         </ng-container>
-    
+
         <ng-container matColumnDef="preparationDate">
             <th mat-header-cell *matHeaderCellDef> preparationDate</th>
             <td mat-cell class="table-cell" *matCellDef="let order">{{order.preparationDate | date: 'dd-MM-yyyy'}}</td>
         </ng-container>
-    
+
         <ng-container matColumnDef="bendingDate">
             <th mat-header-cell *matHeaderCellDef> bendingDate</th>
             <td mat-cell class="table-cell" *matCellDef="let order">{{order.bendingDate | date: 'dd-MM-yyyy'}}</td>
         </ng-container>
-    
+
         <ng-container matColumnDef="assemblyDate">
             <th mat-header-cell *matHeaderCellDef> assemblyDate</th>
             <td mat-cell class="table-cell" *matCellDef="let order">{{order.assemblyDate | date: 'dd-MM-yyyy'}}</td>
         </ng-container>
-    
+
         <ng-container matColumnDef="action">
             <th mat-header-cell *matHeaderCellDef> action </th>
             <td mat-cell class="table-cell" *matCellDef="let order">
@@ -48,18 +48,12 @@
                 </button>
             </td>
         </ng-container>
-    
+
         <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
         <tr class="orderRow" mat-row *matRowDef="let rowOrder; columns: columnsToDisplay"
             (click)="this.focusedOrder.next(rowOrder)"></tr>
     </table>
-    <mat-paginator
-      class="margin"
-      [pageSizeOptions]="[5, 10, 20]"
-      #paginator
-      showFirstLastButtons
-    ></mat-paginator>
-
-
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" #paginator showFirstLastButtons></mat-paginator>
+</div>
 
 <app-orders-totals [orders$]="orders$"></app-orders-totals>

@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Order, OrderClient } from 'app/core/services/api.service';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, switchMap } from 'rxjs';
 
 @Component({
     selector: 'app-orders-totals',
@@ -16,16 +16,23 @@ export class OrdersTotalsComponent {
     totalCuttingTime = 0;
     totalRecords = 0;
 
-    constructor(private orderClient: OrderClient) {
-        this.orders$ = this.orderClient.list();
-        this.getTotalDays();
+    ngOnChanges() {
+        this.updateTotals()
     }
 
-    getTotalDays() {
+    updateTotals() {
         this.orders$.subscribe(orders => {
+
+            this.totalAssemblyTime = 0;
+            this.totalBendingTime = 0;
+            this.totalPreparationTime = 0;
+            this.totalCuttingTime = 0;
+            this.totalRecords = 0;
+            this.totalRecords = orders.length;
+
             orders.forEach((order) => {
                 let assemblyDate = new Date(order.assemblyDate);
-                this.totalAssemblyTime ++;
+                this.totalAssemblyTime++;
 
                 let preparationDate = new Date(order.preparationDate);
                 this.totalPreparationTime += this.getDiffDays(assemblyDate, preparationDate);
@@ -35,8 +42,6 @@ export class OrdersTotalsComponent {
 
                 let cuttingDate = new Date(order.cuttingDate);
                 this.totalCuttingTime += this.getDiffDays(assemblyDate, cuttingDate);
-
-                this.totalRecords ++;
             });
         });
     }
@@ -44,7 +49,6 @@ export class OrdersTotalsComponent {
     getDiffDays(endDate: Date, startDate: Date) {
         let diffTime = endDate.getTime() - startDate.getTime();
         const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-        console.log(diffDays);
         return diffDays;
     }
 }
