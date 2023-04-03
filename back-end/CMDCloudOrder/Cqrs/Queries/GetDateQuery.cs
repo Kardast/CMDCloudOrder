@@ -54,6 +54,6 @@ internal class GetDateQueryHandler : IRequestHandler<GetDateQuery, GetDateQueryH
             }
         }
 
-        return Task.FromResult(days.LastOrDefault())!;
+        return Task.FromResult(days.ToArray().LastOrDefault())!;
     }
 }

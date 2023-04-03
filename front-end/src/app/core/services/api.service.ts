@@ -39,7 +39,7 @@ export interface IOrderClient {
     /**
      * @return Success
      */
-    dateList(): Observable<number[]>;
+    dateList(): Observable<OrderTime[]>;
 }
 
 @Injectable({
@@ -272,7 +272,7 @@ export class OrderClient implements IOrderClient {
     /**
      * @return Success
      */
-    dateList(): Observable<number[]> {
+    dateList(): Observable<OrderTime[]> {
         let url_ = this.baseUrl + "/api/Order/DateList";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -291,14 +291,14 @@ export class OrderClient implements IOrderClient {
                 try {
                     return this.processDateList(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<number[]>;
+                    return _observableThrow(e) as any as Observable<OrderTime[]>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<number[]>;
+                return _observableThrow(response_) as any as Observable<OrderTime[]>;
         }));
     }
 
-    protected processDateList(response: HttpResponseBase): Observable<number[]> {
+    protected processDateList(response: HttpResponseBase): Observable<OrderTime[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -308,7 +308,7 @@ export class OrderClient implements IOrderClient {
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as number[];
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as OrderTime[];
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -328,6 +328,13 @@ export interface Order {
     preparationDate?: string | undefined;
     bendingDate?: string | undefined;
     assemblyDate?: string | undefined;
+}
+
+export interface OrderTime {
+    assembly?: number;
+    assemblyCutSum?: number;
+    assemblyPrepSum?: number;
+    assemblyBendingSum?: number;
 }
 
 export class ApiException extends Error {

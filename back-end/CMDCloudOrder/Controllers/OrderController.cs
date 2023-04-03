@@ -74,7 +74,7 @@ public class OrderController : ControllerBase
 
     [HttpGet]
     [Route("[action]")]
-    [ProducesResponseType(typeof(List<int>), 200)]
+    [ProducesResponseType(typeof(List<GetDateQueryHandler.OrderTime>), 200)]
     public async Task<IActionResult> DateList()
     {
         if (!ModelState.IsValid)
