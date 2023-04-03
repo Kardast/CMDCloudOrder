@@ -1,7 +1,5 @@
 using CMDCloudOrder.Data;
-using CMDCloudOrder.Models;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace CMDCloudOrder.Cqrs.Queries;
 
@@ -23,9 +21,9 @@ internal class GetDateQueryHandler : IRequestHandler<GetDateQuery, List<int>>
         var assembly = 0;
         foreach (var order in orders)
         {
-            if (order.AssemblyDate is not null && order.CuttingDate is not null && order.PreparationDate is not null && order.BendingDate is not null)
+            if (order.AssemblyDate is not null && order.CuttingDate is not null && order.PreparationDate is not null &&
+                order.BendingDate is not null)
             {
-                
                 var assemblycutDiff = order.AssemblyDate.Value.DayNumber - order.CuttingDate.Value.DayNumber;
                 var assemblyPrepDiff = order.AssemblyDate.Value.DayNumber - order.PreparationDate.Value.DayNumber;
                 var asssemblyBendingDiff = order.AssemblyDate.Value.DayNumber - order.BendingDate.Value.DayNumber;
@@ -36,7 +34,7 @@ internal class GetDateQueryHandler : IRequestHandler<GetDateQuery, List<int>>
                 days.Add(assembly);
             }
         }
-        
+
         return Task.FromResult(days);
     }
 }
