@@ -71,4 +71,19 @@ public class OrderController : ControllerBase
         await _mediator.Send(command);
         return Ok("File removed");
     }
+
+    [HttpGet]
+    [Route("[action]")]
+    [ProducesResponseType(typeof(List<int>), 200)]
+    public async Task<IActionResult> DateList()
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var query = new GetDateQuery();
+        var result = await _mediator.Send(query);
+        return Ok(result);
+    }
 }
