@@ -1,6 +1,8 @@
 using System.Reflection;
 using CMDCloudOrder.Configurations;
+using CMDCloudOrder.Cqrs.Commands;
 using CMDCloudOrder.Data;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,7 +23,9 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.Get
 
 var app = builder.Build();
 
-app.Services.CreateScope().ServiceProvider.GetRequiredService<OrderDbContext>().Database.Migrate();
+var sp = app.Services.CreateScope().ServiceProvider;
+sp.GetRequiredService<OrderDbContext>().Database.Migrate();
+sp.GetRequiredService<IMediator>().Send(new SeedOrdersCommand()).Wait();
 
 app.UseCors(b => b
     .WithOrigins("http://localhost:4200")

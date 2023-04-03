@@ -19,7 +19,6 @@ internal class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCommand, O
     public async Task<Order> Handle(UpdateOrderCommand request, CancellationToken cancellationToken)
     {
         var order = await GetById(request.Order.Id);
-
         if (order is null)
         {
             throw new InvalidOperationException();
