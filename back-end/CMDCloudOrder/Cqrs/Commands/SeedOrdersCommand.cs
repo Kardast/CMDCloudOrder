@@ -45,6 +45,4 @@ internal class SeedOrdersCommandHandler : IRequestHandler<SeedOrdersCommand, int
 
         return await _db.SaveChangesAsync(ct);
     }
-
-    private Task<Order?> GetById(int id) => _db.Orders.FirstOrDefaultAsync(or => or.Id == id);
 }
