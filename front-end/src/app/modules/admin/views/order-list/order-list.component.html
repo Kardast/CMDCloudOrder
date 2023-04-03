@@ -22,22 +22,22 @@
 
         <ng-container matColumnDef="cuttingDate">
             <th mat-header-cell *matHeaderCellDef> cuttingDate</th>
-            <td mat-cell class="table-cell" *matCellDef="let order">{{order.cuttingDate | date: 'dd/MM/yyyy'}}</td>
+            <td mat-cell class="table-cell" *matCellDef="let order">{{order.cuttingDate | date: 'dd-MM-yyyy'}}</td>
         </ng-container>
 
         <ng-container matColumnDef="preparationDate">
             <th mat-header-cell *matHeaderCellDef> preparationDate</th>
-            <td mat-cell class="table-cell" *matCellDef="let order">{{order.preparationDate | date: 'dd/MM/yyyy'}}</td>
+            <td mat-cell class="table-cell" *matCellDef="let order">{{order.preparationDate | date: 'dd-MM-yyyy'}}</td>
         </ng-container>
 
         <ng-container matColumnDef="bendingDate">
             <th mat-header-cell *matHeaderCellDef> bendingDate</th>
-            <td mat-cell class="table-cell" *matCellDef="let order">{{order.bendingDate | date: 'dd/MM/yyyy'}}</td>
+            <td mat-cell class="table-cell" *matCellDef="let order">{{order.bendingDate | date: 'dd-MM-yyyy'}}</td>
         </ng-container>
 
         <ng-container matColumnDef="assemblyDate">
             <th mat-header-cell *matHeaderCellDef> assemblyDate</th>
-            <td mat-cell class="table-cell" *matCellDef="let order">{{order.assemblyDate | date: 'dd/MM/yyyy'}}</td>
+            <td mat-cell class="table-cell" *matCellDef="let order">{{order.assemblyDate | date: 'dd-MM-yyyy'}}</td>
         </ng-container>
 
         <ng-container matColumnDef="action">

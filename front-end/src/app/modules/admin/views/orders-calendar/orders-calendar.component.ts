@@ -1,13 +1,9 @@
-import { Component, Input, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { CalendarOptions } from '@fullcalendar/core';
 import itLocale from '@fullcalendar/core/locales/it';
 import enGbLocale from '@fullcalendar/core/locales/en-gb';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import { TranslocoService } from '@ngneat/transloco';
-import { OrderClient } from 'app/core/services/api.service';
-import { Observable } from 'rxjs';
-import { Order } from 'app/core/services/api.service';
-import { FullCalendarComponent } from '@fullcalendar/angular';
 
 @Component({
   selector: 'app-orders-calendar',
@@ -16,46 +12,11 @@ import { FullCalendarComponent } from '@fullcalendar/angular';
   encapsulation: ViewEncapsulation.None
 })
 export class OrdersCalendarComponent {
-  @Input() stage: string;
-
   calendarOptions: CalendarOptions;
-  orderDate$ = new Observable<Order[]>
-  @ViewChild("calendar") calendarComponent: FullCalendarComponent
 
-  constructor(private translocoService: TranslocoService, private orderClient: OrderClient) {
+  constructor(
+    private translocoService: TranslocoService) {
     this.calendarOptions = this.createCalendarOptions();
-    this.orderDate$ = orderClient.list()
-  }
-
-  ngOnInit() {
-    this.orderDate$.subscribe((orders: Order[]) => {
-      let dateType: string;
-      switch (this.stage) {
-        case 'cutting':
-          dateType = 'cuttingDate';
-          break;
-        case 'preparation':
-          dateType = 'preparationDate';
-          break;
-        case 'bending':
-          dateType = 'bendingDate';
-          break;
-        case 'assembly':
-          dateType = 'assemblyDate';
-          break;
-      }
-      let events = this.generateEvents(orders, dateType)
-      const calendarApi = this.calendarComponent.getApi();
-      calendarApi.addEventSource(events);
-    });
-  }
-
-  generateEvents(orders: Order[], dateType: string) {
-    return orders.map((order: Order) => ({
-      title: order.customer + " - " + order.orderNumber,
-      start: new Date(order[dateType]),
-      color: "blue",
-    }));
   }
 
   createCalendarOptions(): CalendarOptions {
