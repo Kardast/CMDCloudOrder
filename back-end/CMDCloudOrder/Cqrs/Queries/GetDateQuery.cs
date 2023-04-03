@@ -22,7 +22,7 @@ internal class GetDateQueryHandler : IRequestHandler<GetDateQuery, GetDateQueryH
         _db = db;
     }
 
-    public Task<OrderTime> Handle(GetDateQuery request, CancellationToken ct)
+    public Task<OrderTime?> Handle(GetDateQuery request, CancellationToken ct)
     {
         var orders = _db.Orders.AsQueryable();
         var days = new List<OrderTime>();
@@ -54,6 +54,6 @@ internal class GetDateQueryHandler : IRequestHandler<GetDateQuery, GetDateQueryH
             }
         }
 
-        return Task.FromResult(days.ToArray().LastOrDefault())!;
+        return Task.FromResult(days.LastOrDefault());
     }
 }
