@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Order, OrderClient, OrderTime } from 'app/core/services/api.service';
-import { Observable } from 'rxjs';
+import { Observable, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-orders-totals',
@@ -8,25 +8,26 @@ import { Observable } from 'rxjs';
   styleUrls: ['./orders-totals.component.scss']
 })
 export class OrdersTotalsComponent {
+
   @Input() orders$: Observable<Order[]>;
 
   ordersDate$ = new Observable<OrderTime[]>;
-  totalDays = [];
+  listDays = [];
 
-  constructor(private orderClient: OrderClient) {
-  }
+  constructor(private orderClient: OrderClient) { };
 
   ngOnChanges() {
-    this.orders$.subscribe(_ => {
-      this.ordersDate$ = this.orderClient.dateList();
-      this.updateTotals();
-    })
+    this.ordersDate$ = this.orders$.pipe(
+      switchMap(_ => this.orderClient.dateList())
+    );
+    
+    this.updateTotal()
   }
 
-  updateTotals() {
+  updateTotal() {
     this.ordersDate$.subscribe(order => {
-      this.totalDays = [];
-      this.totalDays.push(order);
-    });
+      this.listDays = [];
+      this.listDays.push(order)
+    })
   }
 }
