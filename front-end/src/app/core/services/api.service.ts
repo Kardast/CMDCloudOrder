@@ -19,9 +19,10 @@ export interface IOrderClient {
     /**
      * @param customer (optional) 
      * @param orderNumber (optional) 
+     * @param ordersPerPage (optional) 
      * @return Success
      */
-    list(customer?: string | undefined, orderNumber?: string | undefined): Observable<Order[]>;
+    list(customer?: string | undefined, orderNumber?: string | undefined, ordersPerPage?: number | undefined): Observable<Order[]>;
     /**
      * @param body (optional) 
      * @return Success
@@ -58,9 +59,10 @@ export class OrderClient implements IOrderClient {
     /**
      * @param customer (optional) 
      * @param orderNumber (optional) 
+     * @param ordersPerPage (optional) 
      * @return Success
      */
-    list(customer?: string | undefined, orderNumber?: string | undefined): Observable<Order[]> {
+    list(customer?: string | undefined, orderNumber?: string | undefined, ordersPerPage?: number | undefined): Observable<Order[]> {
         let url_ = this.baseUrl + "/api/Order/List?";
         if (customer === null)
             throw new Error("The parameter 'customer' cannot be null.");
@@ -70,6 +72,10 @@ export class OrderClient implements IOrderClient {
             throw new Error("The parameter 'orderNumber' cannot be null.");
         else if (orderNumber !== undefined)
             url_ += "orderNumber=" + encodeURIComponent("" + orderNumber) + "&";
+        if (ordersPerPage === null)
+            throw new Error("The parameter 'ordersPerPage' cannot be null.");
+        else if (ordersPerPage !== undefined)
+            url_ += "ordersPerPage=" + encodeURIComponent("" + ordersPerPage) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
