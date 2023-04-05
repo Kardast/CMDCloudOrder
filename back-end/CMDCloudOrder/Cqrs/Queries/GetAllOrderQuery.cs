@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CMDCloudOrder.Cqrs.Queries;
 
-public record GetAllOrderQuery(string? Customer, string? OrderNumber) : IRequest<Order[]>;
+public record GetAllOrderQuery(string? Customer, string? OrderNumber, int? OrdersPerPage) : IRequest<Order[]>;
 
 internal class GetAllOrdersHandler : IRequestHandler<GetAllOrderQuery, Order[]>
 {
@@ -19,6 +19,11 @@ internal class GetAllOrdersHandler : IRequestHandler<GetAllOrderQuery, Order[]>
     public Task<Order[]> Handle(GetAllOrderQuery request, CancellationToken ct)
     {
         var orders = _db.Orders.AsQueryable();
+        if (request.OrdersPerPage is not null)
+        {
+            orders = orders.Take((int)request.OrdersPerPage);
+        }
+
         if (request.Customer is not null)
         {
             orders = orders.Where(order => order.Customer.ToLower().Contains(request.Customer.ToLower()));
