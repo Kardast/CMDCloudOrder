@@ -21,6 +21,7 @@ internal class GetAllOrdersHandler : IRequestHandler<GetAllOrderQuery, PagedResu
     public async Task<PagedResult<Order>> Handle(GetAllOrderQuery request, CancellationToken ct)
     {
         var orders = _db.Orders.AsQueryable();
+        
         if (!string.IsNullOrWhiteSpace(request.Customer))
         {
             orders = orders.Where(order => order.Customer.ToLower().Contains(request.Customer.ToLower()));

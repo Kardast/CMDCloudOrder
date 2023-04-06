@@ -1,2 +1,4 @@
 ﻿back-end/CMDCloudOrder/obj
 back-end/CMDCloudOrder/bin
+back-end/.vs
+back-end/CMDCloudOrder/appsettings.Local.json

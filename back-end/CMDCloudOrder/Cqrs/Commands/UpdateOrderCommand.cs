@@ -18,22 +18,15 @@ internal class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCommand, O
 
     public async Task<Order> Handle(UpdateOrderCommand request, CancellationToken cancellationToken)
     {
-        var order = await GetById(request.Order.Id);
+        var order = await _db.Orders.FirstOrDefaultAsync(or => or.Id == request.Order.Id, cancellationToken);
         if (order is null)
         {
             throw new InvalidOperationException();
         }
 
-        order.Customer = request.Order.Customer;
-        order.OrderNumber = request.Order.OrderNumber;
-        order.CuttingDate = request.Order.CuttingDate;
-        order.PreparationDate = request.Order.PreparationDate;
-        order.BendingDate = request.Order.BendingDate;
-        order.AssemblyDate = request.Order.AssemblyDate;
-
+        _db.Entry(order).CurrentValues.SetValues(request.Order);
         await _db.SaveChangesAsync(cancellationToken);
+
         return order;
     }
-
-    private Task<Order?> GetById(int id) => _db.Orders.FirstOrDefaultAsync(or => or.Id == id);
 }
