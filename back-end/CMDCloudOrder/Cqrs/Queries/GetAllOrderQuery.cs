@@ -21,12 +21,12 @@ internal class GetAllOrdersHandler : IRequestHandler<GetAllOrderQuery, PagedResu
     public async Task<PagedResult<Order>> Handle(GetAllOrderQuery request, CancellationToken ct)
     {
         var orders = _db.Orders.AsQueryable();
-        if (request.Customer is not null)
+        if (!string.IsNullOrWhiteSpace(request.Customer))
         {
             orders = orders.Where(order => order.Customer.ToLower().Contains(request.Customer.ToLower()));
         }
 
-        if (request.OrderNumber is not null)
+        if (!string.IsNullOrWhiteSpace(request.OrderNumber))
         {
             orders = orders.Where(order => order.OrderNumber.ToLower().Contains(request.OrderNumber.ToLower()));
         }
