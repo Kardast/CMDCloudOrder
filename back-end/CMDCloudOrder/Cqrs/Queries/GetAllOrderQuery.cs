@@ -5,9 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CMDCloudOrder.Cqrs.Queries;
 
-public record GetAllOrderQuery(string? Customer, string? OrderNumber) : IRequest<Order[]>;
+public record GetAllOrderQuery(string? Customer, string? OrderNumber, int PageIndex, int PageSize) : IRequest<PagedResult<Order>>;
 
-internal class GetAllOrdersHandler : IRequestHandler<GetAllOrderQuery, Order[]>
+public record PagedResult<T>(T[] Items, int TotalCount);
+
+internal class GetAllOrdersHandler : IRequestHandler<GetAllOrderQuery, PagedResult<Order>>
 {
     private readonly OrderDbContext _db;
 
@@ -16,10 +18,10 @@ internal class GetAllOrdersHandler : IRequestHandler<GetAllOrderQuery, Order[]>
         _db = db;
     }
 
-    public Task<Order[]> Handle(GetAllOrderQuery request, CancellationToken ct)
+    public async Task<PagedResult<Order>> Handle(GetAllOrderQuery request, CancellationToken ct)
     {
         var orders = _db.Orders.AsQueryable();
-
+        
         if (!string.IsNullOrWhiteSpace(request.Customer))
         {
             orders = orders.Where(order => order.Customer.ToLower().Contains(request.Customer.ToLower()));
@@ -30,6 +32,14 @@ internal class GetAllOrdersHandler : IRequestHandler<GetAllOrderQuery, Order[]>
             orders = orders.Where(order => order.OrderNumber.ToLower().Contains(request.OrderNumber.ToLower()));
         }
 
-        return orders.ToArrayAsync(ct);
+        int totalCount = await orders.CountAsync(ct);
+
+        orders = orders
+            .Skip((request.PageIndex - 1) * request.PageSize)
+            .Take(request.PageSize);
+
+        var items = await orders.ToArrayAsync(ct);
+
+        return new PagedResult<Order>(items, totalCount);
     }
 }

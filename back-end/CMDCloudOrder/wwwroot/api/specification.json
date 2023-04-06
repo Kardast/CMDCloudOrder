@@ -32,11 +32,46 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "pageIndex",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderPagedResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderPagedResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderPagedResult"
+                }
+              }
+            }
           }
         }
       }
@@ -101,34 +136,68 @@
             "description": "Success"
           }
         }
-      },
+      }
+    },
+    "/api/Order/Delete/{id}": {
       "delete": {
         "tags": [
           "Order"
         ],
         "operationId": "Order_Delete",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Order"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Order"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/Order"
-              }
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "style": "simple",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Order/DateList": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "operationId": "Order_DateList",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OrderTime"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OrderTime"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OrderTime"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -171,6 +240,45 @@
             "type": "string",
             "nullable": true,
             "example": "yyyy-MM-dd"
+          }
+        }
+      },
+      "OrderPagedResult": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/Order"
+            }
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "OrderTime": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "assemblyTotal": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cuttingTotal": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "preparationTotal": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "bendingTotal": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       }
