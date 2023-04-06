@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Bogus" Version="34.0.2" />
         <PackageReference Include="MediatR" Version="12.0.1" />
         <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.0" />
@@ -27,5 +28,9 @@
         <Link>.dockerignore</Link>
       </Content>
     </ItemGroup>
+
+    <Target Name="NSwag" AfterTargets="Build" Condition="'$(Configuration)' == 'Development' Or '$(Configuration)' == 'Debug'">
+        <Exec Command="(set ASPNETCORE_ENVIRONMENT=Development) &amp; nswag run /runtime:Net70" ContinueOnError="WarnAndContinue" />
+    </Target>
 
 </Project>

@@ -1,12 +1,15 @@
 using System.Reflection;
 using CMDCloudOrder.Configurations;
+using CMDCloudOrder.Cqrs.Commands;
 using CMDCloudOrder.Data;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Configuration.AddJsonFile("appsettings.Local.json", optional: true);
 
+// Add services to the container.
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -16,12 +19,14 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddCors();
 
 // Dependency Injection
-builder.Services.AddDbContext<OrderDbContext>();
+builder.Services.AddDbContext<OrderDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
 var app = builder.Build();
 
-app.Services.CreateScope().ServiceProvider.GetRequiredService<OrderDbContext>().Database.Migrate();
+var sp = app.Services.CreateScope().ServiceProvider;
+sp.GetRequiredService<OrderDbContext>().Database.Migrate();
+sp.GetRequiredService<IMediator>().Send(new SeedOrdersCommand()).Wait();
 
 app.UseCors(b => b
     .WithOrigins("http://localhost:4200")

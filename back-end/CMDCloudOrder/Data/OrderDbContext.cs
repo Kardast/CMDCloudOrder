@@ -6,41 +6,17 @@ namespace CMDCloudOrder.Data;
 
 public class OrderDbContext : DbContext
 {
-    public DbSet<Order> Orders { get; set; } = null!;
+    public DbSet<Order> Orders => Set<Order>();
 
     public OrderDbContext(DbContextOptions<OrderDbContext> options) : base(options)
     {
     }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    protected override void ConfigureConventions(ModelConfigurationBuilder builder)
     {
-        optionsBuilder.UseSqlServer(
-            "data source=db5eb13a5470;initial catalog=cmd-db;user id=sa;password=yourStrong(!)Password;TrustServerCertificate=True;");
-    }
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        base.OnModelCreating(modelBuilder);
-
-        modelBuilder.Entity<Order>()
-            .Property(x => x.CuttingDate)
-            .HasConversion<DateOnlyConverter>()
-            .HasColumnType("date");
-
-        modelBuilder.Entity<Order>()
-            .Property(x => x.AssemblyDate)
-            .HasConversion<DateOnlyConverter>()
-            .HasColumnType("date");
-
-        modelBuilder.Entity<Order>()
-            .Property(x => x.BendingDate)
-            .HasConversion<DateOnlyConverter>()
-            .HasColumnType("date");
-
-        modelBuilder.Entity<Order>()
-            .Property(x => x.PreparationDate)
-            .HasConversion<DateOnlyConverter>()
-            .HasColumnType("date");
+        builder.Properties<DateOnly>()
+            .HaveConversion<DateOnlyConverter>()
+            .HaveColumnType("date");
     }
 }
 

@@ -19,9 +19,11 @@ export interface IOrderClient {
     /**
      * @param customer (optional) 
      * @param orderNumber (optional) 
+     * @param pageIndex (optional) 
+     * @param pageSize (optional) 
      * @return Success
      */
-    list(customer?: string | undefined, orderNumber?: string | undefined): Observable<Order[]>;
+    list(customer?: string | undefined, orderNumber?: string | undefined, pageIndex?: number | undefined, pageSize?: number | undefined): Observable<OrderPagedResult>;
     /**
      * @param body (optional) 
      * @return Success
@@ -36,6 +38,10 @@ export interface IOrderClient {
      * @return Success
      */
     delete(id: number): Observable<void>;
+    /**
+     * @return Success
+     */
+    dateList(): Observable<OrderTime[]>;
 }
 
 @Injectable({
@@ -54,9 +60,11 @@ export class OrderClient implements IOrderClient {
     /**
      * @param customer (optional) 
      * @param orderNumber (optional) 
+     * @param pageIndex (optional) 
+     * @param pageSize (optional) 
      * @return Success
      */
-    list(customer?: string | undefined, orderNumber?: string | undefined): Observable<Order[]> {
+    list(customer?: string | undefined, orderNumber?: string | undefined, pageIndex?: number | undefined, pageSize?: number | undefined): Observable<OrderPagedResult> {
         let url_ = this.baseUrl + "/api/Order/List?";
         if (customer === null)
             throw new Error("The parameter 'customer' cannot be null.");
@@ -66,6 +74,14 @@ export class OrderClient implements IOrderClient {
             throw new Error("The parameter 'orderNumber' cannot be null.");
         else if (orderNumber !== undefined)
             url_ += "orderNumber=" + encodeURIComponent("" + orderNumber) + "&";
+        if (pageIndex === null)
+            throw new Error("The parameter 'pageIndex' cannot be null.");
+        else if (pageIndex !== undefined)
+            url_ += "pageIndex=" + encodeURIComponent("" + pageIndex) + "&";
+        if (pageSize === null)
+            throw new Error("The parameter 'pageSize' cannot be null.");
+        else if (pageSize !== undefined)
+            url_ += "pageSize=" + encodeURIComponent("" + pageSize) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -83,14 +99,14 @@ export class OrderClient implements IOrderClient {
                 try {
                     return this.processList(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<Order[]>;
+                    return _observableThrow(e) as any as Observable<OrderPagedResult>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<Order[]>;
+                return _observableThrow(response_) as any as Observable<OrderPagedResult>;
         }));
     }
 
-    protected processList(response: HttpResponseBase): Observable<Order[]> {
+    protected processList(response: HttpResponseBase): Observable<OrderPagedResult> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -100,7 +116,7 @@ export class OrderClient implements IOrderClient {
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Order[];
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as OrderPagedResult;
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -264,6 +280,56 @@ export class OrderClient implements IOrderClient {
         }
         return _observableOf(null as any);
     }
+
+    /**
+     * @return Success
+     */
+    dateList(): Observable<OrderTime[]> {
+        let url_ = this.baseUrl + "/api/Order/DateList";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDateList(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDateList(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<OrderTime[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<OrderTime[]>;
+        }));
+    }
+
+    protected processDateList(response: HttpResponseBase): Observable<OrderTime[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as OrderTime[];
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
 }
 
 export interface Order {
@@ -276,7 +342,19 @@ export interface Order {
     assemblyDate?: string | undefined;
 }
 
-export class ApiException extends Error {
+export interface OrderPagedResult {
+    items?: Order[] | undefined;
+    totalCount?: number;
+}
+
+export interface OrderTime {
+    assemblyTotal?: number;
+    cuttingTotal?: number;
+    preparationTotal?: number;
+    bendingTotal?: number;
+}
+
+export class SwaggerException extends Error {
     override message: string;
     status: number;
     response: string;
@@ -293,10 +371,10 @@ export class ApiException extends Error {
         this.result = result;
     }
 
-    protected isApiException = true;
+    protected isSwaggerException = true;
 
-    static isApiException(obj: any): obj is ApiException {
-        return obj.isApiException === true;
+    static isSwaggerException(obj: any): obj is SwaggerException {
+        return obj.isSwaggerException === true;
     }
 }
 
@@ -304,7 +382,7 @@ function throwException(message: string, status: number, response: string, heade
     if (result !== null && result !== undefined)
         return _observableThrow(result);
     else
-        return _observableThrow(new ApiException(message, status, response, headers, null));
+        return _observableThrow(new SwaggerException(message, status, response, headers, null));
 }
 
 function blobToText(blob: any): Observable<string> {
