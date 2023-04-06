@@ -15,17 +15,20 @@ import { MatPaginator } from '@angular/material/paginator';
 export class OrderListComponent {
   columnsToDisplay = ['id', 'customer', 'orderNumber', 'cuttingDate', 'preparationDate', 'bendingDate', 'assemblyDate', 'action'];
   focusedOrder = new BehaviorSubject<Order | null>(null);
-  searchFilter$ = new BehaviorSubject<{ customer?: string; orderNumber?: string }>({});
+  searchFilter$ = new BehaviorSubject<{ customer?: string; orderNumber?: string; }>({});
+  pagination$ = new BehaviorSubject<{ pageNumber?: number; pageSize?: number; }>({})
+  fullListOrders$ = new Observable<Order[]>;
   orderCreate$ = new BehaviorSubject<Order | null>(null);
   orderUpdate$ = new BehaviorSubject<Order | null>(null);
   orderDelete$ = new BehaviorSubject<Order | null>(null);
   orders$ = new Observable<Order[]>;
+  pageIndex = 2
   dataSource = new MatTableDataSource<Order>();
   @ViewChild('paginator') paginator: MatPaginator;
 
   constructor(private orderClient: OrderClient) {
-    this.orders$ = combineLatest([this.searchFilter$, this.orderCreate$, this.orderUpdate$, this.orderDelete$])
-      .pipe(switchMap(([filter]) => this.orderClient.list(filter.customer, filter.orderNumber)));
+    this.orders$ = combineLatest([this.searchFilter$, this.pagination$, this.orderCreate$, this.orderUpdate$, this.orderDelete$,])
+      .pipe(switchMap(([filter, pagination]) => this.orderClient.list(filter.customer, filter.orderNumber, pagination.pageNumber, pagination.pageSize)));
   }
 
   ngAfterViewInit() {
@@ -34,6 +37,12 @@ export class OrderListComponent {
       this.dataSource.paginator = this.paginator;
     })
   }
+
+  nextPage() {
+    this.pagination$.next({ ...this.pagination$.value, pageNumber: this.pageIndex++ });
+    this.pagination$.next({ ...this.pagination$.value, pageSize: 5 })
+  }
+
 
   deleteOrder(order: any, event: MouseEvent) {
     event.stopPropagation();

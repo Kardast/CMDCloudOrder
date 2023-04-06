@@ -20,7 +20,7 @@ public class OrderController : ControllerBase
     [HttpGet]
     [Route("[action]")]
     [ProducesResponseType(typeof(List<Order>), 200)]
-    public async Task<IActionResult> List([FromQuery] string? customer, [FromQuery] string? orderNumber, [FromQuery] int? ordersPerPage)
+    public async Task<IActionResult> List([FromQuery] string? customer, [FromQuery] string? orderNumber, [FromQuery] PaginationFilter? ordersPerPage)
     {
         if (!ModelState.IsValid)
         {

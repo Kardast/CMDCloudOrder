@@ -18,7 +18,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddCors();
 
 // Dependency Injection
-builder.Services.AddDbContext<OrderDbContext>();
+builder.Services.AddDbContext<OrderDbContext>(ServiceLifetime.Transient);
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
 var app = builder.Build();

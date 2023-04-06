@@ -29,15 +29,15 @@ internal class GetDateQueryHandler : IRequestHandler<GetDateQuery, GetDateQueryH
         var result = new OrderTime();
         foreach (var order in orders)
         {
-            if (!order.AssemblyDate.HasValue)
+            if (!order.PreparationDate.HasValue || !order.BendingDate.HasValue || !order.AssemblyDate.HasValue)
             {
                 continue;
             }
 
             result.AssemblyTotal++;
-            result.CuttingTotal += order.AssemblyDate.Value.DayNumber - order.CuttingDate.GetValueOrDefault(order.AssemblyDate.Value).DayNumber;
-            result.PreparationTotal += order.AssemblyDate.Value.DayNumber - order.PreparationDate.GetValueOrDefault(order.AssemblyDate.Value).DayNumber;
             result.BendingTotal += order.AssemblyDate.Value.DayNumber - order.BendingDate.GetValueOrDefault(order.AssemblyDate.Value).DayNumber;
+            result.PreparationTotal += order.BendingDate.Value.DayNumber - order.PreparationDate.GetValueOrDefault(order.AssemblyDate.Value).DayNumber;
+            result.CuttingTotal += order.PreparationDate.Value.DayNumber - order.CuttingDate.GetValueOrDefault(order.AssemblyDate.Value).DayNumber;
         }
 
         return result;

@@ -19,10 +19,11 @@ export interface IOrderClient {
     /**
      * @param customer (optional) 
      * @param orderNumber (optional) 
-     * @param ordersPerPage (optional) 
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
      * @return Success
      */
-    list(customer?: string | undefined, orderNumber?: string | undefined, ordersPerPage?: number | undefined): Observable<Order[]>;
+    list(customer?: string | undefined, orderNumber?: string | undefined, pageNumber?: number | undefined, pageSize?: number | undefined): Observable<Order[]>;
     /**
      * @param body (optional) 
      * @return Success
@@ -59,10 +60,11 @@ export class OrderClient implements IOrderClient {
     /**
      * @param customer (optional) 
      * @param orderNumber (optional) 
-     * @param ordersPerPage (optional) 
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
      * @return Success
      */
-    list(customer?: string | undefined, orderNumber?: string | undefined, ordersPerPage?: number | undefined): Observable<Order[]> {
+    list(customer?: string | undefined, orderNumber?: string | undefined, pageNumber?: number | undefined, pageSize?: number | undefined): Observable<Order[]> {
         let url_ = this.baseUrl + "/api/Order/List?";
         if (customer === null)
             throw new Error("The parameter 'customer' cannot be null.");
@@ -72,10 +74,14 @@ export class OrderClient implements IOrderClient {
             throw new Error("The parameter 'orderNumber' cannot be null.");
         else if (orderNumber !== undefined)
             url_ += "orderNumber=" + encodeURIComponent("" + orderNumber) + "&";
-        if (ordersPerPage === null)
-            throw new Error("The parameter 'ordersPerPage' cannot be null.");
-        else if (ordersPerPage !== undefined)
-            url_ += "ordersPerPage=" + encodeURIComponent("" + ordersPerPage) + "&";
+        if (pageNumber === null)
+            throw new Error("The parameter 'pageNumber' cannot be null.");
+        else if (pageNumber !== undefined)
+            url_ += "PageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize === null)
+            throw new Error("The parameter 'pageSize' cannot be null.");
+        else if (pageSize !== undefined)
+            url_ += "PageSize=" + encodeURIComponent("" + pageSize) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -337,13 +343,13 @@ export interface Order {
 }
 
 export interface OrderTime {
-    assembly?: number;
-    assemblyCutSum?: number;
-    assemblyPrepSum?: number;
-    assemblyBendingSum?: number;
+    assemblyTotal?: number;
+    cuttingTotal?: number;
+    preparationTotal?: number;
+    bendingTotal?: number;
 }
 
-export class ApiException extends Error {
+export class SwaggerException extends Error {
     override message: string;
     status: number;
     response: string;
@@ -360,10 +366,10 @@ export class ApiException extends Error {
         this.result = result;
     }
 
-    protected isApiException = true;
+    protected isSwaggerException = true;
 
-    static isApiException(obj: any): obj is ApiException {
-        return obj.isApiException === true;
+    static isSwaggerException(obj: any): obj is SwaggerException {
+        return obj.isSwaggerException === true;
     }
 }
 
@@ -371,7 +377,7 @@ function throwException(message: string, status: number, response: string, heade
     if (result !== null && result !== undefined)
         return _observableThrow(result);
     else
-        return _observableThrow(new ApiException(message, status, response, headers, null));
+        return _observableThrow(new SwaggerException(message, status, response, headers, null));
 }
 
 function blobToText(blob: any): Observable<string> {
