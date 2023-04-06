@@ -1,7 +1,7 @@
 import { Component, Input, ViewChild } from '@angular/core';
 import 'devextreme/data/odata/store';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { BehaviorSubject, combineLatest, Observable, switchMap } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Observable, switchMap } from 'rxjs';
 import { Order, OrderClient, OrderPaginatedResult } from 'app/core/services/api.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -20,6 +20,9 @@ export class OrderListComponent {
   orderUpdate$ = new BehaviorSubject<Order | null>(null);
   orderDelete$ = new BehaviorSubject<Order | null>(null);
   orders$ = new Observable<OrderPaginatedResult>;
+  pageSize$ = this.orders$.pipe(map(paginatedResult => paginatedResult.pageSize));
+  pageIndex$ = this.orders$.pipe(map(paginatedResult => paginatedResult.pageIndex));
+  totalCount$ = this.orders$.pipe(map(paginatedResult => paginatedResult.totalCount));
   dataSource = new MatTableDataSource<Order>();
   totalRecords: number;
   @ViewChild('paginator') paginator: MatPaginator;
@@ -46,7 +49,6 @@ export class OrderListComponent {
       console.log(paginatedResult);
 
       this.dataSource.data = paginatedResult.items;
-    //   this.dataSource.paginator = this.paginator;
     });
   }
 
