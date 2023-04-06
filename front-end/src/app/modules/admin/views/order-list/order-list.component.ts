@@ -46,7 +46,7 @@ export class OrderListComponent {
       console.log(paginatedResult);
 
       this.dataSource.data = paginatedResult.items;
-      this.dataSource.paginator = this.paginator;
+    //   this.dataSource.paginator = this.paginator;
     });
   }
 
