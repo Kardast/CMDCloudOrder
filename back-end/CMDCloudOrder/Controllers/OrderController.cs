@@ -17,20 +17,9 @@ public class OrderController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpGet]
-    [Route("[action]")]
-    [ProducesResponseType(typeof(List<Order>), 200)]
-    public async Task<IActionResult> List([FromQuery] string? customer, [FromQuery] string? orderNumber)
-    {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
-        var query = new GetAllOrderQuery(customer, orderNumber);
-        var result = await _mediator.Send(query);
-        return Ok(result);
-    }
+    [HttpGet("[action]")]
+    public Task<PagedResult<Order>> List([FromQuery] string? customer, [FromQuery] string? orderNumber, int pageIndex, int pageSize) =>
+        _mediator.Send(new GetAllOrderQuery(customer, orderNumber, pageIndex, pageSize));
 
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] Order order)

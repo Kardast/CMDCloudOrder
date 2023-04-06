@@ -14,8 +14,7 @@ public class OrderDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer(
-            "data source=db5eb13a5470;initial catalog=cmd-db;user id=sa;password=yourStrong(!)Password;TrustServerCertificate=True;");
+        optionsBuilder.UseSqlServer("data source=.;initial catalog=cmd-db;user id=sa;password=yourStrong(!)Password;TrustServerCertificate=True;");
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
