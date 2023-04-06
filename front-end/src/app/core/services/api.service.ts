@@ -348,10 +348,10 @@ export interface OrderPagedResult {
 }
 
 export interface OrderTime {
-    assembly?: number;
-    assemblyCutSum?: number;
-    assemblyPrepSum?: number;
-    assemblyBendingSum?: number;
+    assemblyTotal?: number;
+    cuttingTotal?: number;
+    preparationTotal?: number;
+    bendingTotal?: number;
 }
 
 export class SwaggerException extends Error {

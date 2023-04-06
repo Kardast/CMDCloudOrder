@@ -264,19 +264,19 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "assembly": {
+          "assemblyTotal": {
             "type": "integer",
             "format": "int32"
           },
-          "assemblyCutSum": {
+          "cuttingTotal": {
             "type": "integer",
             "format": "int32"
           },
-          "assemblyPrepSum": {
+          "preparationTotal": {
             "type": "integer",
             "format": "int32"
           },
-          "assemblyBendingSum": {
+          "bendingTotal": {
             "type": "integer",
             "format": "int32"
           }
