@@ -55,9 +55,9 @@
   </table>
   <mat-paginator
   [pageSizeOptions]="[10, 20]" #paginator showFirstLastButtons
-  [length]="totalRecords"
-  [pageIndex]="searchFilter$.value.pageIndex"
-  [pageSize]="searchFilter$.value.pageSize"
+  [length]="totalCount$ | async"
+  [pageIndex]="pageIndex$ | async"
+  [pageSize]="pageSize$ | async"
   (page)="onPageChanged($event)"></mat-paginator>
 </div>
 

@@ -18,7 +18,6 @@ internal class GetAllOrdersHandler : IRequestHandler<GetAllOrderQuery, GetAllOrd
         public int PageIndex { get; }
         public int PageSize { get; }
         public int TotalCount { get; }
-        public int TotalPages => (int)Math.Ceiling(TotalCount / (double)PageSize);
 
         public PaginatedResult(List<T> items, int totalCount, int pageIndex, int pageSize)
         {
