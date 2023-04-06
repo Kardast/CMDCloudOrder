@@ -19,10 +19,11 @@ export interface IOrderClient {
     /**
      * @param customer (optional) 
      * @param orderNumber (optional) 
-     * @param ordersPerPage (optional) 
+     * @param pageIndex (optional) 
+     * @param pageSize (optional) 
      * @return Success
      */
-    list(customer?: string | undefined, orderNumber?: string | undefined, ordersPerPage?: number | undefined): Observable<Order[]>;
+    list(customer?: string | undefined, orderNumber?: string | undefined, pageIndex?: number | undefined, pageSize?: number | undefined): Observable<OrderPaginatedResult>;
     /**
      * @param body (optional) 
      * @return Success
@@ -59,10 +60,11 @@ export class OrderClient implements IOrderClient {
     /**
      * @param customer (optional) 
      * @param orderNumber (optional) 
-     * @param ordersPerPage (optional) 
+     * @param pageIndex (optional) 
+     * @param pageSize (optional) 
      * @return Success
      */
-    list(customer?: string | undefined, orderNumber?: string | undefined, ordersPerPage?: number | undefined): Observable<Order[]> {
+    list(customer?: string | undefined, orderNumber?: string | undefined, pageIndex?: number | undefined, pageSize?: number | undefined): Observable<OrderPaginatedResult> {
         let url_ = this.baseUrl + "/api/Order/List?";
         if (customer === null)
             throw new Error("The parameter 'customer' cannot be null.");
@@ -72,10 +74,14 @@ export class OrderClient implements IOrderClient {
             throw new Error("The parameter 'orderNumber' cannot be null.");
         else if (orderNumber !== undefined)
             url_ += "orderNumber=" + encodeURIComponent("" + orderNumber) + "&";
-        if (ordersPerPage === null)
-            throw new Error("The parameter 'ordersPerPage' cannot be null.");
-        else if (ordersPerPage !== undefined)
-            url_ += "ordersPerPage=" + encodeURIComponent("" + ordersPerPage) + "&";
+        if (pageIndex === null)
+            throw new Error("The parameter 'pageIndex' cannot be null.");
+        else if (pageIndex !== undefined)
+            url_ += "pageIndex=" + encodeURIComponent("" + pageIndex) + "&";
+        if (pageSize === null)
+            throw new Error("The parameter 'pageSize' cannot be null.");
+        else if (pageSize !== undefined)
+            url_ += "pageSize=" + encodeURIComponent("" + pageSize) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -93,14 +99,14 @@ export class OrderClient implements IOrderClient {
                 try {
                     return this.processList(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<Order[]>;
+                    return _observableThrow(e) as any as Observable<OrderPaginatedResult>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<Order[]>;
+                return _observableThrow(response_) as any as Observable<OrderPaginatedResult>;
         }));
     }
 
-    protected processList(response: HttpResponseBase): Observable<Order[]> {
+    protected processList(response: HttpResponseBase): Observable<OrderPaginatedResult> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -110,7 +116,7 @@ export class OrderClient implements IOrderClient {
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Order[];
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as OrderPaginatedResult;
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -336,11 +342,19 @@ export interface Order {
     assemblyDate?: string | undefined;
 }
 
+export interface OrderPaginatedResult {
+    items?: Order[] | undefined;
+    pageIndex?: number;
+    pageSize?: number;
+    totalCount?: number;
+    readonly totalPages?: number;
+}
+
 export interface OrderTime {
-    assembly?: number;
-    assemblyCutSum?: number;
-    assemblyPrepSum?: number;
-    assemblyBendingSum?: number;
+    assemblyTotal?: number;
+    cuttingTotal?: number;
+    preparationTotal?: number;
+    bendingTotal?: number;
 }
 
 export class ApiException extends Error {

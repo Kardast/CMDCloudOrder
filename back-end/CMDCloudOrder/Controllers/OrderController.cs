@@ -19,17 +19,18 @@ public class OrderController : ControllerBase
 
     [HttpGet]
     [Route("[action]")]
-    [ProducesResponseType(typeof(List<Order>), 200)]
-    public async Task<IActionResult> List([FromQuery] string? customer, [FromQuery] string? orderNumber, [FromQuery] int? ordersPerPage)
+    [ProducesResponseType(typeof(GetAllOrdersHandler.PaginatedResult<Order>), 200)]
+    public async Task<IActionResult> List([FromQuery] string? customer, [FromQuery] string? orderNumber, [FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
 
-        var query = new GetAllOrderQuery(customer, orderNumber, ordersPerPage);
+        var query = new GetAllOrderQuery(customer, orderNumber, pageIndex, pageSize);
         var result = await _mediator.Send(query);
-        return Ok(result);
+        var paginatedResult = new GetAllOrdersHandler.PaginatedResult<Order>(result.Items, result.TotalCount, result.PageIndex, result.PageSize);
+        return Ok(paginatedResult);
     }
 
     [HttpPost]

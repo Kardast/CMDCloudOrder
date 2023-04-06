@@ -2,9 +2,9 @@ import { Component, Input, ViewChild } from '@angular/core';
 import 'devextreme/data/odata/store';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { BehaviorSubject, combineLatest, Observable, switchMap } from 'rxjs';
-import { Order, OrderClient } from 'app/core/services/api.service';
+import { Order, OrderClient, OrderPaginatedResult } from 'app/core/services/api.service';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 @UntilDestroy()
 @Component({
@@ -15,24 +15,39 @@ import { MatPaginator } from '@angular/material/paginator';
 export class OrderListComponent {
   columnsToDisplay = ['id', 'customer', 'orderNumber', 'cuttingDate', 'preparationDate', 'bendingDate', 'assemblyDate', 'action'];
   focusedOrder = new BehaviorSubject<Order | null>(null);
-  searchFilter$ = new BehaviorSubject<{ customer?: string; orderNumber?: string }>({});
+  searchFilter$ = new BehaviorSubject<{ customer?: string; orderNumber?: string; pageIndex?: number; pageSize?: number }>({});
   orderCreate$ = new BehaviorSubject<Order | null>(null);
   orderUpdate$ = new BehaviorSubject<Order | null>(null);
   orderDelete$ = new BehaviorSubject<Order | null>(null);
-  orders$ = new Observable<Order[]>;
+  orders$ = new Observable<OrderPaginatedResult>;
   dataSource = new MatTableDataSource<Order>();
+  totalRecords: number;
   @ViewChild('paginator') paginator: MatPaginator;
 
   constructor(private orderClient: OrderClient) {
     this.orders$ = combineLatest([this.searchFilter$, this.orderCreate$, this.orderUpdate$, this.orderDelete$])
-      .pipe(switchMap(([filter]) => this.orderClient.list(filter.customer, filter.orderNumber)));
+      .pipe(
+        switchMap(([filter]) =>
+          this.orderClient.list(
+            filter.customer,
+            filter.orderNumber,
+            filter.pageIndex ?? 1,
+            filter.pageSize ?? 10
+          )
+        )
+      );
   }
 
   ngAfterViewInit() {
-    this.orders$.subscribe(order => {
-      this.dataSource.data = order;
+    this.orders$.subscribe(paginatedResult => {
+      this.totalRecords = paginatedResult.totalCount;
+      console.log(this.totalRecords);
+
+      console.log(paginatedResult);
+
+      this.dataSource.data = paginatedResult.items;
       this.dataSource.paginator = this.paginator;
-    })
+    });
   }
 
   deleteOrder(order: any, event: MouseEvent) {
@@ -47,5 +62,22 @@ export class OrderListComponent {
       .subscribe(() => this.orderDelete$.next(order));
 
     this.focusedOrder.next(null);
+  }
+
+  onPageChanged(event: PageEvent): void {
+    // console.log(event);
+
+    const filter = this.searchFilter$.value;
+    // console.log(filter);
+
+    filter.pageIndex = event.pageIndex + 1;
+    console.log(filter.pageIndex);
+
+    filter.pageSize = event.pageSize;
+    console.log(filter.pageSize);
+
+    this.searchFilter$.next(filter);
+    console.log(this.totalRecords);
+
   }
 }

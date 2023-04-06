@@ -1,22 +1,22 @@
 <mat-card *ngFor="let day of listDays">
   <mat-card-content>
     <h3>Total Summary</h3>
-    <p>Calculated on {{ (orders$ | async)?.length }} records</p>
+    <p>Calculated on {{ (orders$ | async)?.totalCount }} records</p>
   </mat-card-content>
   <mat-card-content>
     <p>Cutting Duration</p>
-    <h2>Total Days: {{day.assemblyCutSum}}</h2>
+    <h2>Total Days: {{day.cuttingTotal}}</h2>
   </mat-card-content>
   <mat-card-content>
     <p>Preparation Duration</p>
-    <h2>Total Days: {{day.assemblyPrepSum}}</h2>
+    <h2>Total Days: {{day.preparationTotal}}</h2>
   </mat-card-content>
   <mat-card-content>
     <p>Bending Duration</p>
-    <h2>Total Days: {{day.assemblyBendingSum}}</h2>
+    <h2>Total Days: {{day.bendingTotal}}</h2>
   </mat-card-content>
   <mat-card-content>
     <p>Assembly Duration</p>
-    <h2>Total Days: {{day.assembly}}</h2>
+    <h2>Total Days: {{day.assemblyTotal}}</h2>
   </mat-card-content>
 </mat-card>

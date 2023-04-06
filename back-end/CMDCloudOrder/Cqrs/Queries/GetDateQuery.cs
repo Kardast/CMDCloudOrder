@@ -35,9 +35,11 @@ internal class GetDateQueryHandler : IRequestHandler<GetDateQuery, GetDateQueryH
             }
 
             result.AssemblyTotal++;
-            result.CuttingTotal += order.AssemblyDate.Value.DayNumber - order.CuttingDate.GetValueOrDefault(order.AssemblyDate.Value).DayNumber;
-            result.PreparationTotal += order.AssemblyDate.Value.DayNumber - order.PreparationDate.GetValueOrDefault(order.AssemblyDate.Value).DayNumber;
             result.BendingTotal += order.AssemblyDate.Value.DayNumber - order.BendingDate.GetValueOrDefault(order.AssemblyDate.Value).DayNumber;
+            if (order.BendingDate != null)
+                result.PreparationTotal += order.BendingDate.Value.DayNumber - order.PreparationDate.GetValueOrDefault(order.BendingDate.Value).DayNumber;
+            if (order.PreparationDate != null)
+                result.CuttingTotal += order.PreparationDate.Value.DayNumber - order.CuttingDate.GetValueOrDefault(order.PreparationDate.Value).DayNumber;
         }
 
         return result;
