@@ -4,8 +4,8 @@ import itLocale from '@fullcalendar/core/locales/it';
 import enGbLocale from '@fullcalendar/core/locales/en-gb';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import { TranslocoService } from '@ngneat/transloco';
-import { OrderClient, OrderMonthResult } from 'app/core/services/api.service';
-import { Observable } from 'rxjs';
+import { OrderClient, OrderPagedCalendar } from 'app/core/services/api.service';
+import {  Observable, } from 'rxjs';
 import { Order } from 'app/core/services/api.service';
 import { FullCalendarComponent } from '@fullcalendar/angular';
 
@@ -19,7 +19,7 @@ export class OrdersCalendarComponent {
   @Input() stage: string;
 
   calendarOptions: CalendarOptions;
-  orderDate$ = new Observable<OrderMonthResult>
+  orderDate$ = new Observable<OrderPagedCalendar>
   @ViewChild("calendar") calendarComponent: FullCalendarComponent
 
   currentMonth: number;
@@ -27,7 +27,7 @@ export class OrdersCalendarComponent {
   constructor(private translocoService: TranslocoService, private orderClient: OrderClient, private cdr: ChangeDetectorRef) {
     this.calendarOptions = this.createCalendarOptions();
     this.currentMonth = new Date().getMonth() + 1;
-    this.orderDate$ = orderClient.getOrdersByMonth(this.currentMonth)
+    this.orderDate$ = orderClient.calendarPagination(this.currentMonth)
   }
 
   ngAfterViewInit() {
@@ -35,8 +35,8 @@ export class OrdersCalendarComponent {
       const newMonth = info.view.currentStart.getMonth() + 1;
       if (newMonth !== this.currentMonth) {
         this.currentMonth = newMonth;
-        this.orderDate$ = this.orderClient.getOrdersByMonth(this.currentMonth);
-        this.orderDate$.subscribe((orders: OrderMonthResult) => {
+        this.orderDate$ = this.orderClient.calendarPagination(this.currentMonth);
+        this.orderDate$.subscribe((orders: OrderPagedCalendar) => {
           const dateType: string = this.getDateType(this.stage);
           const events = this.generateEvents(orders.items, dateType);
           const calendarApi = this.calendarComponent.getApi();
@@ -47,7 +47,7 @@ export class OrdersCalendarComponent {
       }
     });
 
-    this.orderDate$.subscribe((orders: OrderMonthResult) => {
+    this.orderDate$.subscribe((orders: OrderPagedCalendar) => {
       const dateType: string = this.getDateType(this.stage);
       const events = this.generateEvents(orders.items, dateType);
       const calendarApi = this.calendarComponent.getApi();

@@ -25,14 +25,6 @@ export interface IOrderClient {
      */
     list(customer?: string | undefined, orderNumber?: string | undefined, pageIndex?: number | undefined, pageSize?: number | undefined): Observable<OrderPagedResult>;
     /**
-     * @param cuttingMonth (optional) 
-     * @param preparationMonth (optional) 
-     * @param bendingMonth (optional) 
-     * @param assemblyMonth (optional) 
-     * @return Success
-     */
-    getOrdersByMonth(cuttingMonth?: number | undefined, preparationMonth?: number | undefined, bendingMonth?: number | undefined, assemblyMonth?: number | undefined): Observable<OrderMonthResult>;
-    /**
      * @param body (optional) 
      * @return Success
      */
@@ -50,6 +42,11 @@ export interface IOrderClient {
      * @return Success
      */
     dateList(): Observable<OrderTime[]>;
+    /**
+     * @param month (optional) 
+     * @return Success
+     */
+    calendarPagination(month?: number | undefined): Observable<OrderPagedCalendar>;
 }
 
 @Injectable({
@@ -125,76 +122,6 @@ export class OrderClient implements IOrderClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as OrderPagedResult;
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    /**
-     * @param cuttingMonth (optional) 
-     * @param preparationMonth (optional) 
-     * @param bendingMonth (optional) 
-     * @param assemblyMonth (optional) 
-     * @return Success
-     */
-    getOrdersByMonth(cuttingMonth?: number | undefined, preparationMonth?: number | undefined, bendingMonth?: number | undefined, assemblyMonth?: number | undefined): Observable<OrderMonthResult> {
-        let url_ = this.baseUrl + "/api/Order/GetOrdersByMonth?";
-        if (cuttingMonth === null)
-            throw new Error("The parameter 'cuttingMonth' cannot be null.");
-        else if (cuttingMonth !== undefined)
-            url_ += "cuttingMonth=" + encodeURIComponent("" + cuttingMonth) + "&";
-        if (preparationMonth === null)
-            throw new Error("The parameter 'preparationMonth' cannot be null.");
-        else if (preparationMonth !== undefined)
-            url_ += "preparationMonth=" + encodeURIComponent("" + preparationMonth) + "&";
-        if (bendingMonth === null)
-            throw new Error("The parameter 'bendingMonth' cannot be null.");
-        else if (bendingMonth !== undefined)
-            url_ += "bendingMonth=" + encodeURIComponent("" + bendingMonth) + "&";
-        if (assemblyMonth === null)
-            throw new Error("The parameter 'assemblyMonth' cannot be null.");
-        else if (assemblyMonth !== undefined)
-            url_ += "assemblyMonth=" + encodeURIComponent("" + assemblyMonth) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "text/plain"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetOrdersByMonth(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetOrdersByMonth(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<OrderMonthResult>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<OrderMonthResult>;
-        }));
-    }
-
-    protected processGetOrdersByMonth(response: HttpResponseBase): Observable<OrderMonthResult> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as OrderMonthResult;
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -408,6 +335,61 @@ export class OrderClient implements IOrderClient {
         }
         return _observableOf(null as any);
     }
+
+    /**
+     * @param month (optional) 
+     * @return Success
+     */
+    calendarPagination(month?: number | undefined): Observable<OrderPagedCalendar> {
+        let url_ = this.baseUrl + "/api/Order/CalendarPagination?";
+        if (month === null)
+            throw new Error("The parameter 'month' cannot be null.");
+        else if (month !== undefined)
+            url_ += "month=" + encodeURIComponent("" + month) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCalendarPagination(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCalendarPagination(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<OrderPagedCalendar>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<OrderPagedCalendar>;
+        }));
+    }
+
+    protected processCalendarPagination(response: HttpResponseBase): Observable<OrderPagedCalendar> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as OrderPagedCalendar;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
 }
 
 export interface Order {
@@ -420,7 +402,7 @@ export interface Order {
     assemblyDate?: string | undefined;
 }
 
-export interface OrderMonthResult {
+export interface OrderPagedCalendar {
     items?: Order[] | undefined;
 }
 

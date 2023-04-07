@@ -76,74 +76,6 @@
         }
       }
     },
-    "/api/Order/GetOrdersByMonth": {
-      "get": {
-        "tags": [
-          "Order"
-        ],
-        "operationId": "Order_GetOrdersByMonth",
-        "parameters": [
-          {
-            "name": "cuttingMonth",
-            "in": "query",
-            "style": "form",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "preparationMonth",
-            "in": "query",
-            "style": "form",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "bendingMonth",
-            "in": "query",
-            "style": "form",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "assemblyMonth",
-            "in": "query",
-            "style": "form",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrderMonthResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrderMonthResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrderMonthResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/Order": {
       "post": {
         "tags": [
@@ -269,6 +201,47 @@
           }
         }
       }
+    },
+    "/api/Order/CalendarPagination": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "operationId": "Order_CalendarPagination",
+        "parameters": [
+          {
+            "name": "month",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderPagedCalendar"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderPagedCalendar"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderPagedCalendar"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -311,7 +284,7 @@
           }
         }
       },
-      "OrderMonthResult": {
+      "OrderPagedCalendar": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
