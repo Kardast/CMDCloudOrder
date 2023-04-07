@@ -26,7 +26,7 @@ public class OrderController : ControllerBase
     public Task<MonthResult<Order>> GetOrdersByMonth([FromQuery] int? cuttingMonth, [FromQuery] int? preparationMonth,
         [FromQuery] int? bendingMonth, [FromQuery] int? assemblyMonth) =>
         _mediator.Send(new GetOrdersByMonthQuery(cuttingMonth, preparationMonth, bendingMonth, assemblyMonth));
-    
+
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] Order order)
     {
@@ -81,10 +81,10 @@ public class OrderController : ControllerBase
         var result = await _mediator.Send(query);
         return Ok(result);
     }
-    
-    
+
+
     [HttpGet]
     [Route("[action]")]
-    public Task<PagedCalendar<Order>> CalendarPagination([FromQuery]int? month) =>
+    public Task<PagedCalendar<Order>> CalendarPagination([FromQuery] int? month) =>
         _mediator.Send(new CalendarQuery(month));
 }

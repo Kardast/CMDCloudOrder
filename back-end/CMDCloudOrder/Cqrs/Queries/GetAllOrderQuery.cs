@@ -5,7 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CMDCloudOrder.Cqrs.Queries;
 
-public record GetAllOrderQuery(string? Customer, string? OrderNumber, int PageIndex, int PageSize) : IRequest<PagedResult<Order>>;
+public record GetAllOrderQuery
+    (string? Customer, string? OrderNumber, int PageIndex, int PageSize) : IRequest<PagedResult<Order>>;
 
 public record PagedResult<T>(T[] Items, int TotalCount);
 
@@ -21,7 +22,7 @@ internal class GetAllOrdersHandler : IRequestHandler<GetAllOrderQuery, PagedResu
     public async Task<PagedResult<Order>> Handle(GetAllOrderQuery request, CancellationToken ct)
     {
         var orders = _db.Orders.AsQueryable();
-        
+
         if (!string.IsNullOrWhiteSpace(request.Customer))
         {
             orders = orders.Where(order => order.Customer.ToLower().Contains(request.Customer.ToLower()));
