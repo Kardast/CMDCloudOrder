@@ -18,9 +18,15 @@ public class OrderController : ControllerBase
     }
 
     [HttpGet("[action]")]
-    public Task<PagedResult<Order>> List([FromQuery] string? customer, [FromQuery] string? orderNumber, int pageIndex, int pageSize) =>
+    public Task<PagedResult<Order>> List([FromQuery] string? customer, [FromQuery] string? orderNumber, int pageIndex,
+        int pageSize) =>
         _mediator.Send(new GetAllOrderQuery(customer, orderNumber, pageIndex, pageSize));
 
+    [HttpGet("[action]")]
+    public Task<MonthResult<Order>> GetOrdersByMonth([FromQuery] int? cuttingMonth, [FromQuery] int? preparationMonth,
+        [FromQuery] int? bendingMonth, [FromQuery] int? assemblyMonth) =>
+        _mediator.Send(new GetOrdersByMonthQuery(cuttingMonth, preparationMonth, bendingMonth, assemblyMonth));
+    
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] Order order)
     {
