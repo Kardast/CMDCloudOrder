@@ -1,11 +1,11 @@
-import { Component, Input, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, ViewChild, ViewEncapsulation } from '@angular/core';
 import { CalendarOptions } from '@fullcalendar/core';
 import itLocale from '@fullcalendar/core/locales/it';
 import enGbLocale from '@fullcalendar/core/locales/en-gb';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import { TranslocoService } from '@ngneat/transloco';
-import { OrderClient } from 'app/core/services/api.service';
-import { Observable } from 'rxjs';
+import { OrderClient, OrderPagedCalendar } from 'app/core/services/api.service';
+import {  Observable, } from 'rxjs';
 import { Order } from 'app/core/services/api.service';
 import { FullCalendarComponent } from '@fullcalendar/angular';
 
@@ -19,35 +19,55 @@ export class OrdersCalendarComponent {
   @Input() stage: string;
 
   calendarOptions: CalendarOptions;
-  orderDate$ = new Observable<Order[]>
+  orderDate$ = new Observable<OrderPagedCalendar>
   @ViewChild("calendar") calendarComponent: FullCalendarComponent
 
-  constructor(private translocoService: TranslocoService, private orderClient: OrderClient) {
+  currentMonth: number;
+
+  constructor(private translocoService: TranslocoService, private orderClient: OrderClient, private cdr: ChangeDetectorRef) {
     this.calendarOptions = this.createCalendarOptions();
-    this.orderDate$ = orderClient.list()
+    this.currentMonth = new Date().getMonth() + 1;
+    this.orderDate$ = orderClient.calendarPagination(this.currentMonth)
   }
 
-  ngOnInit() {
-    this.orderDate$.subscribe((orders: Order[]) => {
-      let dateType: string;
-      switch (this.stage) {
-        case 'cutting':
-          dateType = 'cuttingDate';
-          break;
-        case 'preparation':
-          dateType = 'preparationDate';
-          break;
-        case 'bending':
-          dateType = 'bendingDate';
-          break;
-        case 'assembly':
-          dateType = 'assemblyDate';
-          break;
+  ngAfterViewInit() {
+    this.calendarComponent.getApi().on('datesSet', (info) => {
+      const newMonth = info.view.currentStart.getMonth() + 1;
+      if (newMonth !== this.currentMonth) {
+        this.currentMonth = newMonth;
+        this.orderDate$ = this.orderClient.calendarPagination(this.currentMonth);
+        this.orderDate$.subscribe((orders: OrderPagedCalendar) => {
+          const dateType: string = this.getDateType(this.stage);
+          const events = this.generateEvents(orders.items, dateType);
+          const calendarApi = this.calendarComponent.getApi();
+          calendarApi.removeAllEvents();
+          calendarApi.addEventSource(events);
+          this.cdr.detectChanges();
+        });
       }
-      let events = this.generateEvents(orders, dateType)
+    });
+
+    this.orderDate$.subscribe((orders: OrderPagedCalendar) => {
+      const dateType: string = this.getDateType(this.stage);
+      const events = this.generateEvents(orders.items, dateType);
       const calendarApi = this.calendarComponent.getApi();
       calendarApi.addEventSource(events);
     });
+  }
+
+  getDateType(stage: string): string {
+    switch (stage) {
+      case 'cutting':
+        return 'cuttingDate';
+      case 'preparation':
+        return 'preparationDate';
+      case 'bending':
+        return 'bendingDate';
+      case 'assembly':
+        return 'assemblyDate';
+      default:
+        return '';
+    }
   }
 
   generateEvents(orders: Order[], dateType: string) {

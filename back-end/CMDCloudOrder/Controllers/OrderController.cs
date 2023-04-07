@@ -75,4 +75,10 @@ public class OrderController : ControllerBase
         var result = await _mediator.Send(query);
         return Ok(result);
     }
+    
+    
+    [HttpGet]
+    [Route("[action]")]
+    public Task<PagedCalendar<Order>> CalendarPagination([FromQuery]int? month) =>
+        _mediator.Send(new CalendarQuery(month));
 }

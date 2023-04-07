@@ -201,6 +201,47 @@
           }
         }
       }
+    },
+    "/api/Order/CalendarPagination": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "operationId": "Order_CalendarPagination",
+        "parameters": [
+          {
+            "name": "month",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderPagedCalendar"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderPagedCalendar"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderPagedCalendar"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -240,6 +281,19 @@
             "type": "string",
             "nullable": true,
             "example": "yyyy-MM-dd"
+          }
+        }
+      },
+      "OrderPagedCalendar": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/Order"
+            }
           }
         }
       },

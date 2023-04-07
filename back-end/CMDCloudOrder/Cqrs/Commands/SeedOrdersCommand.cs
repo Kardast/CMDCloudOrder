@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CMDCloudOrder.Cqrs.Commands;
 
-public record SeedOrdersCommand(int Amount = 250) : IRequest<int>;
+public record SeedOrdersCommand(int Amount = 0) : IRequest<int>;
 
 internal class SeedOrdersCommandHandler : IRequestHandler<SeedOrdersCommand, int>
 {
