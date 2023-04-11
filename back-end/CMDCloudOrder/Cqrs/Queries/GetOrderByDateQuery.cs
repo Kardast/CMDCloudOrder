@@ -20,24 +20,6 @@ internal class GetOrderByDateQueryHandler : IRequestHandler<GetOrderByDateQuery,
 
     public Task<Order[]> Handle(GetOrderByDateQuery request, CancellationToken ct)
     {
-        //
-        // var filterExpressions = new Expression<Func<Order, bool>>[]
-        // {
-        //     or => or.CuttingDate!.Value.Month == request.Month,
-        //     or => or.PreparationDate!.Value.Month == request.Month,
-        //     or => or.BendingDate!.Value.Month == request.Month,
-        //     or => or.AssemblyDate!.Value.Month == request.Month
-        // };
-        //
-        // var yearExpressions = new Expression<Func<Order, bool>>[]
-        // {
-        //     or => or.CuttingDate!.Value.Year == request.Year,
-        //     or => or.PreparationDate!.Value.Year == request.Year,
-        //     or => or.BendingDate!.Value.Year == request.Year,
-        //     or => or.AssemblyDate!.Value.Year == request.Year
-        // };
-        
-        
         var start = new DateOnly(request.Year, request.Month, 1);
         var end = start.AddMonths(1).AddDays(-1);
         var filterExpressions = new Expression<Func<Order, bool>>[]
@@ -47,11 +29,9 @@ internal class GetOrderByDateQueryHandler : IRequestHandler<GetOrderByDateQuery,
             or => or.BendingDate!.Value >= start && or.BendingDate!.Value <= end,
             or => or.AssemblyDate!.Value >= start && or.AssemblyDate!.Value <= end
         };
-        
 
         return _db.Orders
             .Where(filterExpressions.Or())
-            // .Where(yearExpressions.Or())
             .ToArrayAsync(ct);
     }
 }
