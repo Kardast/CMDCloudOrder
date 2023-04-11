@@ -4,7 +4,7 @@ import itLocale from '@fullcalendar/core/locales/it';
 import enGbLocale from '@fullcalendar/core/locales/en-gb';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import { TranslocoService } from '@ngneat/transloco';
-import { OrderClient, OrderPagedCalendar } from 'app/core/services/api.service';
+import { OrderClient } from 'app/core/services/api.service';
 import {  Observable, } from 'rxjs';
 import { Order } from 'app/core/services/api.service';
 import { FullCalendarComponent } from '@fullcalendar/angular';
@@ -19,26 +19,30 @@ export class OrdersCalendarComponent {
   @Input() stage: string;
 
   calendarOptions: CalendarOptions;
-  orderDate$ = new Observable<OrderPagedCalendar>
+  orderDate$ = new Observable<Order[]>
   @ViewChild("calendar") calendarComponent: FullCalendarComponent
 
   currentMonth: number;
+  currentYear : number;
 
   constructor(private translocoService: TranslocoService, private orderClient: OrderClient, private cdr: ChangeDetectorRef) {
     this.calendarOptions = this.createCalendarOptions();
     this.currentMonth = new Date().getMonth() + 1;
-    this.orderDate$ = orderClient.calendarPagination(this.currentMonth)
+    this.currentYear = new Date().getFullYear();
+    this.orderDate$ = orderClient.getOrderByDate(this.currentMonth, this.currentYear)
   }
 
   ngAfterViewInit() {
     this.calendarComponent.getApi().on('datesSet', (info) => {
       const newMonth = info.view.currentStart.getMonth() + 1;
-      if (newMonth !== this.currentMonth) {
+      const newYear = info.view.currentStart.getFullYear();
+      if (newMonth !== this.currentMonth || newYear !== this.currentYear) {
         this.currentMonth = newMonth;
-        this.orderDate$ = this.orderClient.calendarPagination(this.currentMonth);
-        this.orderDate$.subscribe((orders: OrderPagedCalendar) => {
+        this.currentYear = newYear;
+        this.orderDate$ = this.orderClient.getOrderByDate(this.currentMonth, this.currentYear);
+        this.orderDate$.subscribe((orders: Order[]) => {
           const dateType: string = this.getDateType(this.stage);
-          const events = this.generateEvents(orders.items, dateType);
+          const events = this.generateEvents(orders, dateType);
           const calendarApi = this.calendarComponent.getApi();
           calendarApi.removeAllEvents();
           calendarApi.addEventSource(events);
@@ -47,9 +51,9 @@ export class OrdersCalendarComponent {
       }
     });
 
-    this.orderDate$.subscribe((orders: OrderPagedCalendar) => {
+    this.orderDate$.subscribe((orders: Order[]) => {
       const dateType: string = this.getDateType(this.stage);
-      const events = this.generateEvents(orders.items, dateType);
+      const events = this.generateEvents(orders, dateType);
       const calendarApi = this.calendarComponent.getApi();
       calendarApi.addEventSource(events);
     });

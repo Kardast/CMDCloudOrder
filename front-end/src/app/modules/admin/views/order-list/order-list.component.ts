@@ -1,7 +1,7 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { BehaviorSubject, combineLatest, Observable, switchMap } from 'rxjs';
-import { Order, OrderClient, OrderPagedResult } from 'app/core/services/api.service';
+import { Order, OrderClient, OrderPagedResultDto } from 'app/core/services/api.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 
@@ -18,7 +18,7 @@ export class OrderListComponent implements AfterViewInit {
   orderCreate$ = new BehaviorSubject<Order | null>(null);
   orderUpdate$ = new BehaviorSubject<Order | null>(null);
   orderDelete$ = new BehaviorSubject<Order | null>(null);
-  orders$ = new Observable<OrderPagedResult>();
+  orders$ = new Observable<OrderPagedResultDto>();
   totalCount$ = new BehaviorSubject<number>(0);
   dataSource = new MatTableDataSource<Order>();
   @ViewChild(MatPaginator) paginator: MatPaginator;

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Order, OrderClient, OrderPagedResult, OrderTime } from 'app/core/services/api.service';
+import { Order, OrderClient, OrderPagedResultDto, OrderTimeDto } from 'app/core/services/api.service';
 import { Observable, switchMap } from 'rxjs';
 
 @Component({
@@ -9,9 +9,9 @@ import { Observable, switchMap } from 'rxjs';
 })
 export class OrdersTotalsComponent {
 
-  @Input() orders$: Observable<OrderPagedResult>;
+  @Input() orders$: Observable<OrderPagedResultDto>;
 
-  ordersDate$ = new Observable<OrderTime[]>;
+  ordersDate$ = new Observable<OrderTimeDto[]>;
   listDays = [];
 
   constructor(private orderClient: OrderClient) { };
