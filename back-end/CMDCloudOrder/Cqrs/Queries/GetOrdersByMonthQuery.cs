@@ -1,15 +1,13 @@
 using CMDCloudOrder.Data;
 using CMDCloudOrder.Models;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace CMDCloudOrder.Cqrs.Queries;
 
-public record GetOrdersByMonthQuery
-    (int? CuttingMonth, int? PreparationMonth, int? BendingMonth, int? AssemblyMonth) : IRequest<MonthResult<Order>>;
+public record GetOrdersByMonthQuery(int? CuttingMonth, int? PreparationMonth, int? BendingMonth, int? AssemblyMonth) : IRequest<Order[]>;
 
-public record MonthResult<T>(IEnumerable<Order> Items);
-
-internal class GetOrdersByMonthQueryHandler : IRequestHandler<GetOrdersByMonthQuery, MonthResult<Order>>
+internal class GetOrdersByMonthQueryHandler : IRequestHandler<GetOrdersByMonthQuery, Order[]>
 {
     private readonly OrderDbContext _db;
 
@@ -18,9 +16,9 @@ internal class GetOrdersByMonthQueryHandler : IRequestHandler<GetOrdersByMonthQu
         _db = db;
     }
 
-    public Task<MonthResult<Order>> Handle(GetOrdersByMonthQuery request, CancellationToken ct)
+    public Task<Order[]> Handle(GetOrdersByMonthQuery request, CancellationToken ct)
     {
-        var items = _db.Orders.AsEnumerable();
+        var items = _db.Orders.AsQueryable();
 
         if (request.CuttingMonth is not null)
         {
@@ -29,8 +27,7 @@ internal class GetOrdersByMonthQueryHandler : IRequestHandler<GetOrdersByMonthQu
 
         if (request.PreparationMonth is not null)
         {
-            items = items.Where(or =>
-                or.PreparationDate.HasValue && or.PreparationDate.Value.Month == request.PreparationMonth);
+            items = items.Where(or => or.PreparationDate.HasValue && or.PreparationDate.Value.Month == request.PreparationMonth);
         }
 
         if (request.BendingMonth is not null)
@@ -43,6 +40,6 @@ internal class GetOrdersByMonthQueryHandler : IRequestHandler<GetOrdersByMonthQu
             items = items.Where(or => or.AssemblyDate.HasValue && or.AssemblyDate.Value.Month == request.AssemblyMonth);
         }
 
-        return Task.FromResult(new MonthResult<Order>(items));
+        return items.ToArrayAsync(ct);
     }
 };

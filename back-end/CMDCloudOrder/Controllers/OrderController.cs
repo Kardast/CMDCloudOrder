@@ -1,5 +1,6 @@
 using CMDCloudOrder.Cqrs.Commands;
 using CMDCloudOrder.Cqrs.Queries;
+using CMDCloudOrder.Dto;
 using CMDCloudOrder.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +19,7 @@ public class OrderController : ControllerBase
     }
 
     [HttpGet("[action]")]
-    public Task<PagedResult<Order>> List([FromQuery] string? customer, [FromQuery] string? orderNumber, int pageIndex,
+    public Task<PagedResultDto<Order>> List([FromQuery] string? customer, [FromQuery] string? orderNumber, int pageIndex,
         int pageSize) =>
         _mediator.Send(new GetAllOrderQuery(customer, orderNumber, pageIndex, pageSize));
 
@@ -48,8 +49,7 @@ public class OrderController : ControllerBase
         return Ok(result);
     }
 
-    [HttpDelete]
-    [Route("[action]/{id:int}")]
+    [HttpDelete("[action]/{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
         if (!ModelState.IsValid)
@@ -62,9 +62,8 @@ public class OrderController : ControllerBase
         return Ok("File removed");
     }
 
-    [HttpGet]
-    [Route("[action]")]
-    [ProducesResponseType(typeof(List<GetDateQueryHandler.OrderTime>), 200)]
+    [HttpGet("[action]")]
+    [ProducesResponseType(typeof(List<OrderTimeDto>), 200)]
     public async Task<IActionResult> DateList()
     {
         if (!ModelState.IsValid)
