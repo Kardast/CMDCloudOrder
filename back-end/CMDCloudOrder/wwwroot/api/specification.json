@@ -58,85 +58,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/OrderPagedResult"
+                  "$ref": "#/components/schemas/OrderPagedResultDto"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/OrderPagedResult"
+                  "$ref": "#/components/schemas/OrderPagedResultDto"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/OrderPagedResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Order/GetOrdersByMonth": {
-      "get": {
-        "tags": [
-          "Order"
-        ],
-        "operationId": "Order_GetOrdersByMonth",
-        "parameters": [
-          {
-            "name": "cuttingMonth",
-            "in": "query",
-            "style": "form",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "preparationMonth",
-            "in": "query",
-            "style": "form",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "bendingMonth",
-            "in": "query",
-            "style": "form",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "assemblyMonth",
-            "in": "query",
-            "style": "form",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrderMonthResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrderMonthResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrderMonthResult"
+                  "$ref": "#/components/schemas/OrderPagedResultDto"
                 }
               }
             }
@@ -245,7 +177,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/OrderTime"
+                    "$ref": "#/components/schemas/OrderTimeDto"
                   }
                 }
               },
@@ -253,7 +185,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/OrderTime"
+                    "$ref": "#/components/schemas/OrderTimeDto"
                   }
                 }
               },
@@ -261,7 +193,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/OrderTime"
+                    "$ref": "#/components/schemas/OrderTimeDto"
                   }
                 }
               }
@@ -270,17 +202,28 @@
         }
       }
     },
-    "/api/Order/CalendarPagination": {
+    "/api/Order/GetOrderByDate/month/{month}/year/{year}": {
       "get": {
         "tags": [
           "Order"
         ],
-        "operationId": "Order_CalendarPagination",
+        "operationId": "Order_GetOrderByDate",
         "parameters": [
           {
             "name": "month",
-            "in": "query",
-            "style": "form",
+            "in": "path",
+            "style": "simple",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "year",
+            "in": "path",
+            "style": "simple",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -293,17 +236,26 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/OrderPagedCalendar"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Order"
+                  }
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/OrderPagedCalendar"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Order"
+                  }
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/OrderPagedCalendar"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Order"
+                  }
                 }
               }
             }
@@ -352,33 +304,7 @@
           }
         }
       },
-      "OrderMonthResult": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "items": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/Order"
-            }
-          }
-        }
-      },
-      "OrderPagedCalendar": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "items": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/Order"
-            }
-          }
-        }
-      },
-      "OrderPagedResult": {
+      "OrderPagedResultDto": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -395,7 +321,7 @@
           }
         }
       },
-      "OrderTime": {
+      "OrderTimeDto": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
