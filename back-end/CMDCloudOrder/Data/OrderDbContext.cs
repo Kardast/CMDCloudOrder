@@ -18,6 +18,12 @@ public class OrderDbContext : DbContext
             .HaveConversion<DateOnlyConverter>()
             .HaveColumnType("date");
     }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        base.OnConfiguring(optionsBuilder);
+        optionsBuilder.LogTo(Console.WriteLine);
+    }
 }
 
 /// <summary>

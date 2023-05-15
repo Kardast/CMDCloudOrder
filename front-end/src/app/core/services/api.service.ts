@@ -23,7 +23,7 @@ export interface IOrderClient {
      * @param pageSize (optional) 
      * @return Success
      */
-    list(customer?: string | undefined, orderNumber?: string | undefined, pageIndex?: number | undefined, pageSize?: number | undefined): Observable<OrderPagedResult>;
+    list(customer?: string | undefined, orderNumber?: string | undefined, pageIndex?: number | undefined, pageSize?: number | undefined): Observable<OrderPagedResultDto>;
     /**
      * @param body (optional) 
      * @return Success
@@ -41,7 +41,11 @@ export interface IOrderClient {
     /**
      * @return Success
      */
-    dateList(): Observable<OrderTime[]>;
+    dateList(): Observable<OrderTimeDto[]>;
+    /**
+     * @return Success
+     */
+    getOrderByDate(month: number, year: number): Observable<Order[]>;
 }
 
 @Injectable({
@@ -64,7 +68,7 @@ export class OrderClient implements IOrderClient {
      * @param pageSize (optional) 
      * @return Success
      */
-    list(customer?: string | undefined, orderNumber?: string | undefined, pageIndex?: number | undefined, pageSize?: number | undefined): Observable<OrderPagedResult> {
+    list(customer?: string | undefined, orderNumber?: string | undefined, pageIndex?: number | undefined, pageSize?: number | undefined): Observable<OrderPagedResultDto> {
         let url_ = this.baseUrl + "/api/Order/List?";
         if (customer === null)
             throw new Error("The parameter 'customer' cannot be null.");
@@ -99,14 +103,14 @@ export class OrderClient implements IOrderClient {
                 try {
                     return this.processList(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<OrderPagedResult>;
+                    return _observableThrow(e) as any as Observable<OrderPagedResultDto>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<OrderPagedResult>;
+                return _observableThrow(response_) as any as Observable<OrderPagedResultDto>;
         }));
     }
 
-    protected processList(response: HttpResponseBase): Observable<OrderPagedResult> {
+    protected processList(response: HttpResponseBase): Observable<OrderPagedResultDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -116,7 +120,7 @@ export class OrderClient implements IOrderClient {
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as OrderPagedResult;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as OrderPagedResultDto;
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -284,7 +288,7 @@ export class OrderClient implements IOrderClient {
     /**
      * @return Success
      */
-    dateList(): Observable<OrderTime[]> {
+    dateList(): Observable<OrderTimeDto[]> {
         let url_ = this.baseUrl + "/api/Order/DateList";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -303,14 +307,14 @@ export class OrderClient implements IOrderClient {
                 try {
                     return this.processDateList(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<OrderTime[]>;
+                    return _observableThrow(e) as any as Observable<OrderTimeDto[]>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<OrderTime[]>;
+                return _observableThrow(response_) as any as Observable<OrderTimeDto[]>;
         }));
     }
 
-    protected processDateList(response: HttpResponseBase): Observable<OrderTime[]> {
+    protected processDateList(response: HttpResponseBase): Observable<OrderTimeDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -320,7 +324,63 @@ export class OrderClient implements IOrderClient {
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as OrderTime[];
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as OrderTimeDto[];
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return Success
+     */
+    getOrderByDate(month: number, year: number): Observable<Order[]> {
+        let url_ = this.baseUrl + "/api/Order/GetOrderByDate/month/{month}/year/{year}";
+        if (month === undefined || month === null)
+            throw new Error("The parameter 'month' must be defined.");
+        url_ = url_.replace("{month}", encodeURIComponent("" + month));
+        if (year === undefined || year === null)
+            throw new Error("The parameter 'year' must be defined.");
+        url_ = url_.replace("{year}", encodeURIComponent("" + year));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetOrderByDate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetOrderByDate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Order[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Order[]>;
+        }));
+    }
+
+    protected processGetOrderByDate(response: HttpResponseBase): Observable<Order[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Order[];
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -342,12 +402,12 @@ export interface Order {
     assemblyDate?: string | undefined;
 }
 
-export interface OrderPagedResult {
+export interface OrderPagedResultDto {
     items?: Order[] | undefined;
     totalCount?: number;
 }
 
-export interface OrderTime {
+export interface OrderTimeDto {
     assemblyTotal?: number;
     cuttingTotal?: number;
     preparationTotal?: number;
